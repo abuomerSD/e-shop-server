@@ -9,7 +9,10 @@ export class ControllerFactory {
   //   create record
   create = asyncHandler(async (req, res) => {
     const saved = await this.model.create(req.body);
-    res.status(201).json(saved);
+    res.status(201).json({
+      status: "success",
+      data: saved,
+    });
   });
 
   //   find record by id

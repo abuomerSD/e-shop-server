@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/app.js",
-    "swagger-autogen": "node ./src/config/swagger.config.js"
+    "test": "mocha --timeout 10000"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,9 @@
     "slugify": "^1.6.6"
   },
   "devDependencies": {
+    "axios": "^1.13.2",
+    "chai": "^6.2.1",
+    "mocha": "^11.7.5",
     "nodemon": "^3.1.10"
   }
 }
