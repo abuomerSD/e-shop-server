@@ -11,19 +11,14 @@ import {
   deleteUserValidator,
   updateUserValidator,
 } from "../utils/validators/user.validator.js";
-import { validatorMiddleware } from "../middlewares/validatorMiddleware.js";
-
 const router = express.Router();
 
-router
-  .route("/")
-  .get(findAll)
-  .post(createUserValidator, validatorMiddleware, create);
+router.route("/").get(findAll).post(createUserValidator, create);
 
 router
   .route("/:id")
   .get(findOne)
-  .put(updateUserValidator, validatorMiddleware, updateOne)
-  .delete(deleteUserValidator, validatorMiddleware, deleteOne);
+  .put(updateUserValidator, updateOne)
+  .delete(deleteUserValidator, deleteOne);
 
 export default router;

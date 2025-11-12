@@ -1,4 +1,5 @@
 import { body, param } from "express-validator";
+import { validatorMiddleware } from "../../middlewares/validatorMiddleware.js";
 
 export const createUserValidator = [
   body("name")
@@ -16,6 +17,7 @@ export const createUserValidator = [
     .withMessage("password required")
     .isLength({ min: 5 })
     .withMessage("password length must be greater than 5 characters"),
+  validatorMiddleware,
 ];
 
 export const updateUserValidator = [
@@ -39,6 +41,7 @@ export const updateUserValidator = [
     .withMessage("password required")
     .isLength({ min: 5 })
     .withMessage("password length must be greater than 5 characters"),
+  validatorMiddleware,
 ];
 
 export const deleteUserValidator = [
@@ -47,4 +50,5 @@ export const deleteUserValidator = [
     .withMessage("id is required")
     .isUUID()
     .withMessage("invalid id"),
+  validatorMiddleware,
 ];
