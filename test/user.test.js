@@ -8,7 +8,7 @@ const user = {
   password: "jkE#$FDfggfd",
 };
 
-const userId = describe("Users API E2E Tests", () => {
+describe("Users API E2E Tests", () => {
   let createdUserId = "";
   // GET /api/v1/users
   it("should get all users from the database", async () => {

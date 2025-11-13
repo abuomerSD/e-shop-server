@@ -17,3 +17,6 @@ export const DB_DIALECT = process.env.DB_DIALECT;
 
 // testing
 export const API_TEST_URL = process.env.API_TEST_URL;
+
+// jwt
+export const JWT_SECRET = process.env.JWT_SECRET;

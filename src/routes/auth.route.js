@@ -1,26 +1,13 @@
 import express from "express";
+import { signup, login } from "../controllers/auth.controller.js";
 import {
-  create,
-  findOne,
-  findAll,
-  updateOne,
-  deleteOne,
-} from "../controllers/user.controller";
-
-import {
-  createUserValidator,
-  deleteUserValidator,
-  updateUserValidator,
-} from "../utils/validators/user.validator.js";
+  loginValidator,
+  signupValidator,
+} from "../utils/validators/auth.validator.js";
 
 const router = express.Router();
 
-router.route("/").get(findAll).post(createUserValidator, create);
-
-router
-  .route("/:id")
-  .get(findOne)
-  .put(updateUserValidator, updateOne)
-  .delete(deleteUserValidator, deleteOne);
+router.route("/signup").post(signupValidator, signup);
+router.route("/login").post(loginValidator, login);
 
 export default router;
