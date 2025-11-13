@@ -1,5 +1,7 @@
 import userRouter from "../routes/user.route.js";
 
-export const attachRoutes = (app) => {
+const attachRoutes = (app) => {
   app.use("/api/v1/users", userRouter);
 };
+
+export default attachRoutes;

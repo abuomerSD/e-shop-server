@@ -1,4 +1,5 @@
-import { ControllerFactory } from "./controllerFactory.js";
+/* eslint-disable import/extensions */
+import ControllerFactory from "./controllerFactory.js";
 import User from "../models/user.model.js";
 
 const factory = new ControllerFactory(User);
@@ -8,32 +9,32 @@ const factory = new ControllerFactory(User);
  * @route   POST /api/v1/users
  * @access  Public
  */
-export const create = factory.create;
+export const { create } = factory;
 
 /**
  * @desc    Get a single user by ID
  * @route   GET /api/v1/users/:id
  * @access  Public
  */
-export const findOne = factory.findOne;
+export const { findOne } = factory;
 
 /**
  * @desc    Get all users
  * @route   GET /api/v1/users
  * @access  Private
  */
-export const findAll = factory.findAll;
+export const { findAll } = factory;
 
 /**
  * @desc    Update a user by ID
  * @route   PUT /api/v1/users/:id
  * @access  Private
  */
-export const updateOne = factory.updateOne;
+export const { updateOne } = factory;
 
 /**
  * @desc    Delete a user by ID
  * @route   DELETE /api/v1/users/:id
  * @access  Private
  */
-export const deleteOne = factory.deleteOne;
+export const { deleteOne } = factory;

@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
-import { where } from "sequelize";
+import ApiError from "../utils/apiError.js";
 
-export class ControllerFactory {
+class ControllerFactory {
   constructor(model) {
     this.model = model;
   }
@@ -59,7 +59,7 @@ export class ControllerFactory {
     });
 
     if (!record) {
-      throw new Error("Record Not Found");
+      throw new ApiError(400, "Record Not Found");
     }
 
     await record.update(data);
@@ -76,7 +76,7 @@ export class ControllerFactory {
     });
 
     if (!record) {
-      throw new Error("Record Not Found");
+      throw new ApiError(400, "Record Not Found");
     }
 
     await record.destroy();
@@ -87,3 +87,5 @@ export class ControllerFactory {
     });
   });
 }
+
+export default ControllerFactory;

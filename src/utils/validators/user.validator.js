@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import { validatorMiddleware } from "../../middlewares/validatorMiddleware.js";
+import validatorMiddleware from "../../middlewares/validatorMiddleware.js";
 
 export const createUserValidator = [
   body("name")

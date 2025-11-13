@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 
-export const validatorMiddleware = (req, res, next) => {
+const validatorMiddleware = (req, res, next) => {
   const result = validationResult(req);
 
   console.log("result", result);
@@ -14,3 +14,5 @@ export const validatorMiddleware = (req, res, next) => {
 
   next();
 };
+
+export default validatorMiddleware;
