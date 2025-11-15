@@ -23,9 +23,15 @@ export const signup = asyncHandler(async (req, res) => {
     expiresIn: "1d",
   });
 
+  //   delete password from the response
+  const userData = user.get({ plain: true });
+
+  delete userData.password;
+
   // return token in the response
   res.status(201).json({
     status: "success",
+    data: userData,
     token,
   });
 });
@@ -64,9 +70,11 @@ export const login = asyncHandler(async (req, res) => {
   const userData = user.get({ plain: true });
 
   delete userData.password;
+
+  // return the response
   res.status(200).json({
     status: "success",
-    userData,
+    data: userData,
     token,
   });
 });

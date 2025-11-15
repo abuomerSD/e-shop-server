@@ -1,18 +1,33 @@
-// const { DataTypes } = require('sequelize');
-// const sequelize = require('../config/sequelize');
+import { DataTypes } from "sequelize";
+import slugify from "slugify";
 
-// const Category = sequelize.define('Category', {
-//   name: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//     unique: true,
-//   },
-//   slug: {
-//     type: DataTypes.STRING,
-//   },
-//   image: {
-//     type: DataTypes.STRING,
-//   },
-// }, { timestamps: true });
+import sequelize from "../config/sequelize.js";
 
-// module.exports = Category;
+const Category = sequelize.define(
+  "Category",
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    slug: {
+      type: DataTypes.STRING,
+    },
+    image: {
+      type: DataTypes.STRING,
+    },
+  },
+  {
+    timestamps: true,
+    hooks: {
+      beforeSave: async (category) => {
+        if (category.changed("name")) {
+          category.slug = slugify(category.name, { lower: true });
+        }
+      },
+    },
+  }
+);
+
+module.exports = Category;
