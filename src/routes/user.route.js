@@ -11,9 +11,10 @@ import {
   deleteUserValidator,
   updateUserValidator,
 } from "../utils/validators/user.validator.js";
+import { protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router.route("/").get(findAll).post(createUserValidator, create);
+router.route("/").get(findAll).post(protect, createUserValidator, create);
 
 router
   .route("/:id")
