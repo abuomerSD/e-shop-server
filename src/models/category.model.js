@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import slugify from "slugify";
 
-import sequelize from "../config/sequelize.js";
+import sequelize from "../config/sequelize.config.js";
 
 const Category = sequelize.define(
   "Category",
@@ -30,4 +30,4 @@ const Category = sequelize.define(
   }
 );
 
-module.exports = Category;
+export default Category;

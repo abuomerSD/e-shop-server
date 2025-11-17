@@ -11,15 +11,18 @@ import {
   deleteUserValidator,
   updateUserValidator,
 } from "../utils/validators/user.validator.js";
-import { protect } from "../middlewares/auth.js";
+import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router.route("/").get(findAll).post(protect, createUserValidator, create);
+router
+  .route("/")
+  .get(findAll)
+  .post(protect, allowedTo(["admin"]), createUserValidator, create);
 
 router
   .route("/:id")
-  .get(findOne)
-  .put(updateUserValidator, updateOne)
-  .delete(deleteUserValidator, deleteOne);
+  .get(protect, allowedTo(["admin"]), findOne)
+  .put(protect, allowedTo(["admin"]), updateUserValidator, updateOne)
+  .delete(protect, allowedTo(["admin"]), deleteUserValidator, deleteOne);
 
 export default router;
