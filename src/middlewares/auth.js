@@ -32,7 +32,6 @@ export const protect = async (req, res, next) => {
 
       // add user to the  request
       req.user = user;
-
       next();
     } else {
       throw new ApiError(

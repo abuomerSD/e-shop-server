@@ -6,6 +6,12 @@ import sequelize from "../config/sequelize.config.js";
 const Category = sequelize.define(
   "Category",
   {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      primaryKey: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,

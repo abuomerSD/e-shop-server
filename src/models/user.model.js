@@ -8,8 +8,8 @@ const User = sequelize.define(
   "User",
   {
     id: {
-      type: DataTypes.UUID, // نوع UUID
-      defaultValue: DataTypes.UUIDV4, // يولد UUID تلقائيًا
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
