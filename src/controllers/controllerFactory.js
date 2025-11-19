@@ -1,4 +1,6 @@
 import asyncHandler from "express-async-handler";
+import fs from "fs";
+
 import ApiError from "../utils/apiError.js";
 
 class ControllerFactory {
@@ -60,6 +62,14 @@ class ControllerFactory {
 
     if (!record) {
       throw new ApiError(400, "Record Not Found");
+    }
+    // check if this model saves images or files to delete the old file
+    if (record.image) {
+      try {
+        fs.unlink(`uploads/${record.image}`, () => {});
+      } catch (error) {
+        throw new ApiError(400, error.message);
+      }
     }
 
     await record.update(data);

@@ -34,7 +34,9 @@ router
   .put(
     protect,
     allowedTo("admin", "manager"),
+    uploadSingleImage,
     updateCategoryValidator,
+    resizeImage("category"),
     updateOne
   )
   .delete(
