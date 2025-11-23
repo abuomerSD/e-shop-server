@@ -20,6 +20,18 @@ attachRoutes(app);
 // global error handler
 app.use(errorHandler);
 
+// Unhandled Rejections
+process.on("unhandledRejection", (error) => {
+  console.log("Unhandled Rejection: ", error.name, error.message);
+  process.exit(1);
+});
+
+// Uncaught Exceptions
+process.on("uncaughtException", (error) => {
+  console.log("Uncaught Exceptions: ", error.name, error.message);
+  process.exit(1);
+});
+
 // NotFound Routes
 app.use((req, res) => {
   res.status(404).json({

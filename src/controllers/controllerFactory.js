@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import fs from "fs";
 
 import ApiError from "../utils/apiError.js";
+import { ApiFeatures } from "../utils/apiFeatures.js";
 
 class ControllerFactory {
   constructor(model) {
@@ -34,9 +35,14 @@ class ControllerFactory {
 
   //   find All records
   findAll = asyncHandler(async (req, res) => {
-    const records = await this.model.findAll();
+    const apiFeatures = new ApiFeatures(req.query);
+    const whereClause = apiFeatures.search().paginate().sort().whereClause;
+    console.log("whereClause", whereClause);
+    const records = await this.model.findAll(whereClause);
+    const results = records.length;
     res.status(200).json({
       status: "success",
+      results,
       data: records,
     });
   });
