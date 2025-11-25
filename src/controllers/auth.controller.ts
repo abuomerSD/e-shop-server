@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
-import User from "../models/user.model.js";
+import User from "../models/user.model";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/env.config.js";
 import ApiError from "../utils/apiError.js";

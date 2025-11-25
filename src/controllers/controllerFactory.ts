@@ -5,7 +5,7 @@ import ApiError from "../utils/apiError.js";
 import { ApiFeatures } from "../utils/apiFeatures.js";
 
 class ControllerFactory {
-  constructor(model) {
+  constructor(model: any) {
     this.model = model;
   }
 

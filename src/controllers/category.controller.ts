@@ -1,5 +1,5 @@
 /* eslint-disable import/extensions */
-import ControllerFactory from "./controllerFactory.js";
+import ControllerFactory from "./controllerFactory";
 import category from "../models/category.model.js";
 
 const factory = new ControllerFactory(category);

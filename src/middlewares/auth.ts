@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/env.config.js";
-import User from "../models/user.model.js";
+import User from "../models/user.model";
 
-import ApiError from "../utils/apiError.js";
+import ApiError from "../utils/apiError";
 
 export const protect = async (req, res, next) => {
   try {

@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 import ControllerFactory from "./controllerFactory.js";
-import User from "../models/user.model.js";
+import User from "../models/user.model";
 
 const factory = new ControllerFactory(User);
 

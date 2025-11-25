@@ -1,9 +1,9 @@
-import express from "express";
-import { PORT } from "./config/env.config.js";
-import { testDatabaseConnection } from "./config/sequelize.config.js";
+import express, {Request, Response} from "express";
+import { PORT } from "./config/env.config";
+import { testDatabaseConnection } from "./config/sequelize.config";
 import morgan from "morgan";
-import attachRoutes from "./utils/attachRoutes.js";
-import errorHandler from "./middlewares/errorHandler.js";
+import attachRoutes from "./utils/attachRoutes";
+import errorHandler from "./middlewares/errorHandler";
 
 const app = express();
 
