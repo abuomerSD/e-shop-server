@@ -53,7 +53,7 @@ Category.init(
   },
   {
     sequelize,
-    tableName: "categories",
+    tableName: "Categories",
     timestamps: true,
     hooks: {
       beforeSave: async (category: Category) => {
