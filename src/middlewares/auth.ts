@@ -1,10 +1,12 @@
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env.config.js";
-import User from "../models/user.model";
+import { JWT_SECRET } from "../config/env.config";
+import User, { UserInstance } from "../models/user.model";
 
 import ApiError from "../utils/apiError";
+import { NextFunction, Request, Response } from "express";
+import { TokenPayload } from "../types/jwtToken.type";
 
-export const protect = async (req, res, next) => {
+export const protect = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -13,14 +15,14 @@ export const protect = async (req, res, next) => {
       const token = authHeader.split(" ")[1];
 
       // verify the token
-      const decoded = jwt.verify(token, JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
 
       // get the user by the id
       const user = await User.findOne({
         where: {
           id: decoded.id,
         },
-      });
+      }) as unknown as UserInstance;
 
       // check user
       if (!user) {
@@ -45,9 +47,9 @@ export const protect = async (req, res, next) => {
 };
 
 export const allowedTo =
-  (...roles) =>
-  (req, res, next) => {
-    if (roles.includes(req.user.role)) {
+  (...roles: any[]) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.user && roles.includes(req.user.role)) {
       next();
     } else {
       throw new ApiError(403, "This Route is Not Allowed To This Logged User");

@@ -1,4 +1,4 @@
-import express, {Request, Response} from "express";
+import express from "express";
 import { PORT } from "./config/env.config";
 import { testDatabaseConnection } from "./config/sequelize.config";
 import morgan from "morgan";
@@ -21,13 +21,13 @@ attachRoutes(app);
 app.use(errorHandler);
 
 // Unhandled Rejections
-process.on("unhandledRejection", (error) => {
+process.on("unhandledRejection", (error: any) => {
   console.log("Unhandled Rejection: ", error.name, error.message);
   process.exit(1);
 });
 
 // Uncaught Exceptions
-process.on("uncaughtException", (error) => {
+process.on("uncaughtException", (error: any) => {
   console.log("Uncaught Exceptions: ", error.name, error.message);
   process.exit(1);
 });

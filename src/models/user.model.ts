@@ -1,16 +1,62 @@
-// models/User.js
-import { DataTypes } from "sequelize";
+import {
+  Model,
+  DataTypes,
+  Optional
+} from "sequelize";
 import slugify from "slugify";
 import bcrypt from "bcrypt";
-import sequelize from "../config/sequelize.config.js";
+import sequelize from "../config/sequelize.config";
 
-const User = sequelize.define(
-  "User",
+// 1️⃣ Attributes interface (all fields in DB)
+export interface UserAttributes {
+  id?: string;
+  name?: string;
+  slug?: string;
+  email: string;
+  phone?: string;
+  profileImg?: string;
+  password?: string;
+  passwordChangedAt?: Date | null;
+  passwordResetCode?: string | null;
+  passwordResetExpires?: Date | null;
+  passwordResetVerified?: boolean;
+  role?: "user" | "manager" | "admin";
+  active?: boolean;
+}
+
+// 2️⃣ Creation attributes (id auto-generated)
+interface UserCreationAttributes
+  extends Optional<UserAttributes, "id" | "slug" | "role" | "active"> {}
+
+export interface UserInstance
+  extends Model<UserAttributes>,
+    UserAttributes {}
+
+// 3️⃣ Model class with typing
+class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes
+{
+  public id!: string;
+  public name!: string;
+  public slug!: string;
+  public email!: string;
+  public phone!: string;
+  public profileImg!: string;
+  public password!: string;
+  public passwordChangedAt!: Date;
+  public passwordResetCode!: string;
+  public passwordResetExpires!: Date;
+  public passwordResetVerified!: boolean;
+  public role!: "user" | "manager" | "admin";
+  public active!: boolean;
+}
+
+User.init(
   {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
       primaryKey: true,
     },
     name: {
@@ -22,31 +68,19 @@ const User = sequelize.define(
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
+      unique: true,
     },
-    phone: {
-      type: DataTypes.STRING,
-    },
-    profileImg: {
-      type: DataTypes.STRING,
-    },
+    phone: DataTypes.STRING,
+    profileImg: DataTypes.STRING,
     password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    passwordChangedAt: {
-      type: DataTypes.DATE,
-    },
-    passwordResetCode: {
-      type: DataTypes.STRING,
-    },
-    passwordResetExpires: {
-      type: DataTypes.DATE,
-    },
-    passwordResetVerified: {
-      type: DataTypes.BOOLEAN,
-    },
+    passwordChangedAt: DataTypes.DATE,
+    passwordResetCode: DataTypes.STRING,
+    passwordResetExpires: DataTypes.DATE,
+    passwordResetVerified: DataTypes.BOOLEAN,
     role: {
       type: DataTypes.ENUM("user", "manager", "admin"),
       defaultValue: "user",
@@ -57,9 +91,11 @@ const User = sequelize.define(
     },
   },
   {
+    sequelize,
+    modelName: "User",
     timestamps: true,
     hooks: {
-      beforeSave: async (user) => {
+      beforeSave: async (user: User) => {
         if (user.changed("name")) {
           user.slug = slugify(user.name, { lower: true });
         }

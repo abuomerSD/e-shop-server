@@ -9,7 +9,7 @@ import {
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   host: DB_HOST,
-  dialect: DB_DIALECT,
+  dialect: DB_DIALECT as any,
   logging: true,
 });
 

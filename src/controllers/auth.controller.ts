@@ -1,34 +1,39 @@
+import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
-import User from "../models/user.model";
+import User, { UserAttributes, UserInstance } from "../models/user.model";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env.config.js";
-import ApiError from "../utils/apiError.js";
+import { JWT_SECRET } from "../config/env.config";
+import ApiError from "../utils/apiError";
+
+
+// ensure JWT_SECRET is string
+const JWT_SECRET_KEY = JWT_SECRET as string;
 
 /**
  * @desc    Sign up a New User
  * @route   POST /api/v1/auth/signup
  * @access  Public
  */
-export const signup = asyncHandler(async (req, res) => {
+export const signup = asyncHandler(async (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
+
   // create user in the database
   const user = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  });
+    name,
+    email,
+    password,
+  }) as unknown as UserInstance;
 
   // create jwt token
-  const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+  const token = jwt.sign({ id: user.id }, JWT_SECRET_KEY, {
     expiresIn: "1d",
   });
 
-  //   delete password from the response
+  // remove password from returned data
   const userData = user.get({ plain: true });
-
   delete userData.password;
 
-  // return token in the response
   res.status(201).json({
     status: "success",
     data: userData,
@@ -38,40 +43,37 @@ export const signup = asyncHandler(async (req, res) => {
 
 /**
  * @desc    login an existing User
- * @route   POST /api/v1/auth/signup
+ * @route   POST /api/v1/auth/login
  * @access  Public
  */
-export const login = asyncHandler(async (req, res) => {
+export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  // find the user from the database
-  const user = await User.findOne({
-    where: {
-      email,
-    },
-  });
+  // find the user from DB
+  const user = await User.findOne({ where: { email } }) as unknown as UserInstance;
 
-  //   throw error if user not found
   if (!user) {
     throw new ApiError(404, "User Not Found");
   }
 
-  //   check password
-  const passwordIsCorrect = await bcrypt.compare(password, user.password);
+  // check password
+  const passwordIsCorrect = await bcrypt.compare(
+    password,
+    user.password as string
+  );
 
   if (!passwordIsCorrect) {
     throw new ApiError(400, "User Or Password is Incorrect");
   }
 
-  // if password is correct create token
-  const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1d" });
+  // create token
+  const token = jwt.sign({ id: user.id }, JWT_SECRET_KEY, {
+    expiresIn: "1d",
+  });
 
-  //   delete password from the response
   const userData = user.get({ plain: true });
-
   delete userData.password;
 
-  // return the response
   res.status(200).json({
     status: "success",
     data: userData,

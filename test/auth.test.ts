@@ -15,7 +15,7 @@ describe("Auth API E2E Tests", () => {
       const res = await axios.post(`${API_TEST_URL}/auth/signup`, user);
       expect(res.data.data).to.include({ name: user.name });
       expect(res.data.data).to.have.property("token");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
     }
   });
@@ -27,7 +27,7 @@ describe("Auth API E2E Tests", () => {
         email: user.email,
         password: user.password,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
     }
   });

@@ -9,6 +9,9 @@ class ControllerFactory {
     this.model = model;
   }
 
+  model: any = null;
+  
+
   //   create record
   create = asyncHandler(async (req, res) => {
     const saved = await this.model.create(req.body);
@@ -59,7 +62,7 @@ class ControllerFactory {
     });
   });
 
-  updateOneHelper = async (model, id, data) => {
+  updateOneHelper = async (model: any, id: any, data: any) => {
     const record = await this.model.findOne({
       where: {
         id,
@@ -73,7 +76,7 @@ class ControllerFactory {
     if (record.image) {
       try {
         fs.unlink(`uploads/${record.image}`, () => {});
-      } catch (error) {
+      } catch (error: any) {
         throw new ApiError(400, error.message);
       }
     }

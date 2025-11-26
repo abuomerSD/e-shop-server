@@ -1,11 +1,13 @@
 import { Op } from "sequelize";
 
 export class ApiFeatures {
-  constructor(reqQuery) {
+  constructor(reqQuery: any) {
     this.reqQuery = reqQuery;
     this.whereClause = {};
   }
 
+  reqQuery:any = null;
+  whereClause:any = null;
   paginate() {
     if (this.reqQuery.page && this.reqQuery.limit) {
       const page = Number(this.reqQuery.page);

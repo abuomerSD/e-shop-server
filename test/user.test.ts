@@ -26,7 +26,7 @@ describe("Users API E2E Tests", () => {
       const res = await axios.post(`${API_TEST_URL}/users`, user);
       expect(res.data.data).to.include({ name: user.name });
       createdUserId = res.data.data.id;
-    } catch (error) {
+    } catch (error: any) {
       if (error.response) {
         expect(error.response.data.message).to.equal("email must be unique");
       } else {
