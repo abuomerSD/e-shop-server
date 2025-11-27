@@ -40,7 +40,6 @@ class ControllerFactory {
   findAll = asyncHandler(async (req, res) => {
     const apiFeatures = new ApiFeatures(req.query);
     const whereClause = apiFeatures.search().paginate().sort().whereClause;
-    console.log("whereClause", whereClause);
     const records = await this.model.findAll(whereClause);
     const results = records.length;
     res.status(200).json({

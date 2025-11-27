@@ -36,12 +36,12 @@ export const updateUserValidator = [
     .withMessage("email is required")
     .isEmail()
     .withMessage("email not valid"),
-  body("password")
-    .notEmpty()
-    .withMessage("password required")
-    .isLength({ min: 5 })
-    .withMessage("password length must be greater than 5 characters"),
-  validatorMiddleware,
+  // body("password")
+  //   .notEmpty()
+  //   .withMessage("password required")
+  //   .isLength({ min: 5 })
+  //   .withMessage("password length must be greater than 5 characters"),
+  // validatorMiddleware,
 ];
 
 export const deleteUserValidator = [

@@ -13,8 +13,6 @@ const api = axios.create({
 
 export const setToken = (token: string) => {
   api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  console.log("=============================================")
-  console.log('token', token);
 };
 
 
