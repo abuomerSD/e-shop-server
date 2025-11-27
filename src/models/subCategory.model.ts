@@ -9,6 +9,7 @@ export interface SubCategoryAttributes {
   name: string;
   slug?: string | null;
   categoryId: string; // FK
+  image?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -26,6 +27,7 @@ class SubCategory
   public name!: string;
   public slug!: string | null;
   public categoryId!: string;
+  public image!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -58,6 +60,10 @@ SubCategory.init(
       },
       onDelete: "CASCADE",
     },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    }
   },
   {
     sequelize,

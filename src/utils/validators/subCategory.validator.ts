@@ -7,6 +7,11 @@ export const createSubCategoryValidator = [
     .withMessage("name required")
     .isLength({ min: 3 })
     .withMessage("name length is too short"),
+  body("categoryId")
+    .notEmpty()
+    .withMessage("category id is required")
+    .isUUID()
+    .withMessage("category id not valid"),
   validatorMiddleware,
 ];
 
@@ -21,6 +26,11 @@ export const updateSubCategoryValidator = [
     .withMessage("name required")
     .isLength({ min: 3 })
     .withMessage("name length is too short"),
+  body("categoryId")
+    .notEmpty()
+    .withMessage("category id is required")
+    .isUUID()
+    .withMessage("category id not valid"),
   validatorMiddleware,
 ];
 
