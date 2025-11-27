@@ -17,3 +17,6 @@ const upload = multer({ storage, fileFilter });
 
 // upload single image
 export const uploadSingleImage = upload.single("image");
+
+// upload multiple images
+export const uploadMultipleImages = upload.array("images");
