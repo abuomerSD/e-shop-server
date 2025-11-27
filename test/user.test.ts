@@ -1,6 +1,7 @@
 import { expect } from "chai";
-import axios from "axios";
-import { API_TEST_URL } from "../src/config/env.config.js";
+import { login } from "../src/utils/authForTests";
+import { setToken } from "../src/utils/axiosInstance";
+import api from "../src/utils/axiosInstance";
 
 const user = {
   name: `User-${Date.now()}`,
@@ -10,67 +11,45 @@ const user = {
 
 describe("Users API E2E Tests", () => {
   let createdUserId = "";
+
+  before(async () => {
+    const token = await login();
+    setToken(token); 
+  });
+
   // GET /api/v1/users
   it("should get all users from the database", async () => {
-    try {
-      const res = await axios.get(`${API_TEST_URL}/users`);
-      expect(res.data.data).to.be.an("array");
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await api.get("/users");
+    expect(res.data.data).to.be.an("array");
   });
 
   // POST /api/v1/users
   it("should create a new user", async () => {
-    try {
-      const res = await axios.post(`${API_TEST_URL}/users`, user);
-      expect(res.data.data).to.include({ name: user.name });
-      createdUserId = res.data.data.id;
-    } catch (error: any) {
-      if (error.response) {
-        expect(error.response.data.message).to.equal("email must be unique");
-      } else {
-        throw error;
-      }
-    }
+    const res = await api.post("/users", user);
+    expect(res.data.data).to.include({ name: user.name });
+    createdUserId = res.data.data.id;
   });
 
   // GET /api/v1/users/:id
   it("should return specific user by the id", async () => {
-    try {
-      const res = await axios.get(`${API_TEST_URL}/users/${createdUserId}`);
-      expect(res.data.data).to.include({ name: user.name });
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await api.get(`/users/${createdUserId}`);
+    expect(res.data.data).to.include({ name: user.name });
   });
 
   // PUT /api/v1/users/:id
   it("should update specific user by the id", async () => {
-    try {
-      const newUser = {
-        name: `User-${Date.now()}`,
-        email: `test${Date.now()}@gmail.com`,
-        password: "kjlkld7973234",
-      };
+    const newUser = {
+      name: `User-${Date.now()}`,
+      email: `test${Date.now()}@gmail.com`,
+    };
 
-      const res = await axios.put(
-        `${API_TEST_URL}/users/${createdUserId}`,
-        newUser
-      );
-      expect(res.data.data).to.include({ name: newUser.name });
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await api.put(`/users/${createdUserId}`, newUser);
+    expect(res.data.data).to.include({ name: newUser.name });
   });
 
   // DELETE /api/v1/users/:id
   it("should delete specific user by the id", async () => {
-    try {
-      const res = await axios.delete(`${API_TEST_URL}/users/${createdUserId}`);
-      expect(res.data.data).to.include({ id: createdUserId });
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await api.delete(`/users/${createdUserId}`);
+    expect(res.data.data).to.include({ id: createdUserId });
   });
 });

@@ -32,12 +32,15 @@ export class ApiFeatures {
   }
 
   search() {
+    const allowedColumns = ['name', 'email'];
+    if(!allowedColumns.includes(this.reqQuery.searchCol))  return this; // to prevent SQL Injection
+
     if (this.reqQuery.search && this.reqQuery.searchCol) {
       const search = this.reqQuery.search;
       const searchCol = this.reqQuery.searchCol;
       this.whereClause.where = {
         [searchCol]: {
-          [Op.iLike]: `%${search}%`,
+          [Op.like]: `%${search}%`,
         },
       };
     }

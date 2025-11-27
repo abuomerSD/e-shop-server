@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import axios from "axios";
-import { API_TEST_URL } from "../src/config/env.config.js";
+import { API_TEST_URL } from "../src/config/env.config";
 
 const user = {
   name: `User-${Date.now()}`,
