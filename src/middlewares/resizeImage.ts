@@ -3,18 +3,24 @@ import sharp from "sharp";
 import { uuid } from "uuidv4";
 
 // middleware to resize uploaded images , to save server storage
-export const resizeImage = (name: string) => async (req: Request, res: Response, next: NextFunction) => {
-  const filename = `${name}-${uuid()}-${Date.now()}.jpeg`;
-  if(req.file) {
-    await sharp(req.file.buffer)
-    .resize(600, 600)
-    .toFormat("jpeg")
-    .jpeg({ quality: 95 })
-    .toFile(`uploads/${filename}`);
+export const resizeImage =
+  (name: string) => async (req: Request, res: Response, next: NextFunction) => {
+    const filename = `${name}-${uuid()}-${Date.now()}.jpeg`;
+    // resize single image
+    if (req.file) {
+      await sharp(req.file.buffer)
+        .resize(600, 600)
+        .toFormat("jpeg")
+        .jpeg({ quality: 95 })
+        .toFile(`uploads/${filename}`);
 
-    // pass the filename to request body
-  req.body.image = filename;
-  }
+      // pass the filename to request body
+      req.body.image = filename;
+    }
+    // resize multi images
+    else if (req.files) {
+      console.log("files", req.files);
+    }
 
-  next();
-};
+    next();
+  };
