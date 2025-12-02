@@ -1,0 +1,20 @@
+{
+  "name": "client",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "tailwind:watch": "npx @tailwindcss/cli -i ./assets/style/input.css -o ./assets/style/style.css --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.17",
+    "nuxt": "^4.2.1",
+    "tailwindcss": "^4.1.17",
+    "vue": "^3.5.25",
+    "vue-router": "^4.6.3"
+  }
+}
