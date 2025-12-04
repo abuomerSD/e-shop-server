@@ -2,21 +2,11 @@ import { body, param } from "express-validator";
 import validatorMiddleware from "../../middlewares/validatorMiddleware.js";
 
 export const createCartValidator = [
-  body("name")
+  body("userId")
     .notEmpty()
-    .withMessage("name required")
-    .isLength({ min: 3 })
-    .withMessage("name length is too short"),
-  body("email")
-    .notEmpty()
-    .withMessage("email is required")
-    .isEmail()
-    .withMessage("email not valid"),
-  body("password")
-    .notEmpty()
-    .withMessage("password required")
-    .isLength({ min: 5 })
-    .withMessage("password length must be greater than 5 characters"),
+    .withMessage("userId required")
+    .isUUID()
+    .withMessage("this user Id is not valid"),
   validatorMiddleware,
 ];
 
@@ -26,22 +16,12 @@ export const updateCartValidator = [
     .withMessage("id is required")
     .isUUID()
     .withMessage("invalid id"),
-  body("name")
+  body("userId")
     .notEmpty()
-    .withMessage("name required")
-    .isLength({ min: 3 })
-    .withMessage("name length is too short"),
-  body("email")
-    .notEmpty()
-    .withMessage("email is required")
-    .isEmail()
-    .withMessage("email not valid"),
-  // body("password")
-  //   .notEmpty()
-  //   .withMessage("password required")
-  //   .isLength({ min: 5 })
-  //   .withMessage("password length must be greater than 5 characters"),
-  // validatorMiddleware,
+    .withMessage("userId required")
+    .isUUID()
+    .withMessage("this user Id is not valid"),
+  validatorMiddleware,
 ];
 
 export const deleteCartValidator = [
