@@ -5,6 +5,8 @@ import subCategoryRouter from "../routes/subCategory.route";
 import brandsRouter from "../routes/brand.route";
 import productRouter from "../routes/product.route";
 import cartRouter from "../routes/cart.route";
+import couponRouter from "../routes/coupon.route";
+import orderRouter from "../routes/order.route";
 
 const attachRoutes = (app: any) => {
   app.use("/api/v1/users", userRouter);
@@ -14,6 +16,8 @@ const attachRoutes = (app: any) => {
   app.use("/api/v1/brands", brandsRouter);
   app.use("/api/v1/products", productRouter);
   app.use("/api/v1/cart", cartRouter);
+  app.use("/api/v1/coupons", couponRouter);
+  app.use("/api/v1/order", orderRouter);
 };
 
 export default attachRoutes;
