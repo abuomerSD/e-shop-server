@@ -2,11 +2,12 @@ import { body, param } from "express-validator";
 import validatorMiddleware from "../../middlewares/validatorMiddleware.js";
 
 export const createProductValidator = [
-  body("name")
+  body("title")
     .notEmpty()
-    .withMessage("name required")
+    .withMessage("title required")
     .isLength({ min: 3 })
-    .withMessage("name length is too short"),
+    .withMessage("title length is too short"),
+  body("description").notEmpty().withMessage("Description is required"),
   validatorMiddleware,
 ];
 
@@ -16,11 +17,12 @@ export const updateProductValidator = [
     .withMessage("id is required")
     .isUUID()
     .withMessage("invalid id"),
-  body("name")
+  body("title")
     .notEmpty()
-    .withMessage("name required")
+    .withMessage("title required")
     .isLength({ min: 3 })
-    .withMessage("name length is too short"),
+    .withMessage("title length is too short"),
+  body("description").notEmpty().withMessage("Description is required"),
   validatorMiddleware,
 ];
 
