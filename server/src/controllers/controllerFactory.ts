@@ -10,7 +10,6 @@ class ControllerFactory {
   }
 
   model: any = null;
-  
 
   //   create record
   create = asyncHandler(async (req, res) => {
@@ -63,20 +62,19 @@ class ControllerFactory {
 
   updateOneHelper = async (model: any, id: any, data: any) => {
     const record = await this.model.findOne({
-      where: {
-        id,
-      },
+      where: { id },
     });
 
     if (!record) {
       throw new ApiError(400, "Record Not Found");
     }
-    // check if this model saves images or files to delete the old file
+
+    // delete old image safely
     if (record.image) {
       try {
-        fs.unlink(`uploads/${record.image}`, () => {});
+        await fs.promises.unlink(`uploads/${record.image}`);
       } catch (error: any) {
-        throw new ApiError(400, error.message);
+        console.log("Error deleting image:", error.message);
       }
     }
 

@@ -12,7 +12,7 @@ import {
   updateProductValidator,
 } from "../utils/validators/product.validator";
 import { allowedTo, protect } from "../middlewares/auth.js";
-import { uploadSingleImage } from "../middlewares/uploadImage.js";
+import { uploadProductImages } from "../middlewares/uploadImage.js";
 import { resizeImage } from "../middlewares/resizeImage.js";
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router
   .post(
     protect,
     allowedTo("admin", "manager"),
-    uploadSingleImage,
+    uploadProductImages,
     createProductValidator,
     resizeImage("product"),
     create
@@ -34,7 +34,7 @@ router
   .put(
     protect,
     allowedTo("admin", "manager"),
-    uploadSingleImage,
+    uploadProductImages,
     updateProductValidator,
     resizeImage("product"),
     updateOne

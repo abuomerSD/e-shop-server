@@ -17,9 +17,6 @@ testDatabaseConnection();
 // routes
 attachRoutes(app);
 
-// global error handler
-app.use(errorHandler);
-
 // Unhandled Rejections
 process.on("unhandledRejection", (error: any) => {
   console.log("Unhandled Rejection: ", error.name, error.message);
@@ -39,6 +36,9 @@ app.use((req, res) => {
     message: "route not found",
   });
 });
+
+// global error handler
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`server is listening to port : ${PORT}`);

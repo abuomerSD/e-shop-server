@@ -18,5 +18,8 @@ const upload = multer({ storage, fileFilter });
 // upload single image
 export const uploadSingleImage = upload.single("image");
 
-// upload multiple images
-export const uploadMultipleImages = upload.array("images");
+// upload multiple images (for products module)
+export const uploadProductImages = upload.fields([
+  { name: "imageCover", maxCount: 1 },
+  { name: "images", maxCount: 8 },
+]);
