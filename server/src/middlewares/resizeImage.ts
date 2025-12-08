@@ -9,11 +9,7 @@ export const resizeImage =
       // resize single image
       if (req.file) {
         const filename = createNewName(name);
-        await sharp(req.file.buffer)
-          .resize(600, 600)
-          .toFormat("jpeg")
-          .jpeg({ quality: 95 })
-          .toFile(`uploads/${filename}`);
+        await sharpTheImage(req.file.buffer, filename);
 
         // pass the filename to request body
         req.body.image = filename;
@@ -28,11 +24,7 @@ export const resizeImage =
         // image cover (products module)
         if (files.imageCover) {
           const filename = createNewName(name);
-          await sharp(files.imageCover[0].buffer)
-            .resize(600, 600)
-            .toFormat("jpeg")
-            .jpeg({ quality: 95 })
-            .toFile(`uploads/${filename}`);
+          await sharpTheImage(files.imageCover[0].buffer, filename);
 
           // pass the filename to request body
           req.body.imageCover = filename;
@@ -43,11 +35,7 @@ export const resizeImage =
           const images: string[] = [];
           files.images.forEach(async (image) => {
             const filename = createNewName(name);
-            await sharp(image.buffer)
-              .resize(600, 600)
-              .toFormat("jpeg")
-              .jpeg({ quality: 95 })
-              .toFile(`uploads/${filename}`);
+            await sharpTheImage(image.buffer, filename);
 
             // pass the filename to request body
             req.body.images.push(filename);
@@ -65,4 +53,12 @@ export const resizeImage =
 // helper function to create unique names
 const createNewName = (name: string) => {
   return `${name}-${uuid()}-${Date.now()}.jpeg`;
+};
+
+const sharpTheImage = async (buffer: any, filename: string) => {
+  await sharp(buffer)
+    .resize(600, 600)
+    .toFormat("jpeg")
+    .jpeg({ quality: 95 })
+    .toFile(`uploads/${filename}`);
 };
