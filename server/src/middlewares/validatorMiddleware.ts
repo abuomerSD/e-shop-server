@@ -8,8 +8,6 @@ const validatorMiddleware = (
 ) => {
   const result = validationResult(req);
 
-  // console.log("result", result);
-
   if (!result.isEmpty()) {
     return res.status(400).json({
       status: "fail",
