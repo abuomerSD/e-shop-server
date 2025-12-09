@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  create,
-  findOne,
-  findAll,
-  updateOne,
-  deleteOne,
+  addProductToCart,
+  clearLoggedUserCart,
+  deleteItemFromCart,
+  getLoggedUserCart,
+  updateItemQuantity,
 } from "../controllers/cart.controller";
 import {
   createCartValidator,
@@ -14,15 +14,14 @@ import {
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router
-  .route("/")
-  .get(findAll)
-  .post(protect, allowedTo("admin"), createCartValidator, create);
+router.use(protect, allowedTo("user"));
 
 router
-  .route("/:id")
-  .get(protect, allowedTo("admin"), findOne)
-  .put(protect, allowedTo("admin"), updateCartValidator, updateOne)
-  .delete(protect, allowedTo("admin"), deleteCartValidator, deleteOne);
+  .route("/")
+  .get(getLoggedUserCart)
+  .post(addProductToCart)
+  .delete(clearLoggedUserCart);
+
+router.route("/:itemId").put(updateItemQuantity).delete(deleteItemFromCart);
 
 export default router;

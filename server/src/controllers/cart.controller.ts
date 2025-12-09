@@ -1,40 +1,50 @@
 /* eslint-disable import/extensions */
-import ControllerFactory from "./controllerFactory";
+import asyncHandler from "express-async-handler";
+
 import Cart from "../models/cart.model";
-
-const factory = new ControllerFactory(Cart);
+import { Request, Response } from "express";
 
 /**
- * @desc    Create a new cart
+ * @desc    Add product to cart
  * @route   POST /api/v1/cart
- * @access  Public
+ * @access  Private/ User
  */
-export const { create } = factory;
+export const addProductToCart = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
 
 /**
- * @desc    Get a single cart by ID
- * @route   GET /api/v1/cart/:id
- * @access  Public
- */
-export const { findOne } = factory;
-
-/**
- * @desc    Get all cart
+ * @desc    Add product to cart
  * @route   GET /api/v1/cart
- * @access  Private
+ * @access  Private/ User
  */
-export const { findAll } = factory;
+export const getLoggedUserCart = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
 
 /**
- * @desc    Update a cart by ID
- * @route   PUT /api/v1/cart/:id
- * @access  Private
+ * @desc    Add product to cart
+ * @route   DELETE /api/v1/cart
+ * @access  Private/ User
  */
-export const { updateOne } = factory;
+export const clearLoggedUserCart = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
 
 /**
- * @desc    Delete a cart by ID
- * @route   DELETE /api/v1/cart/:id
- * @access  Private
+ * @desc    Add product to cart
+ * @route   PUT /api/v1/cart/:itemId
+ * @access  Private/ User
  */
-export const { deleteOne } = factory;
+export const updateItemQuantity = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
+
+/**
+ * @desc    Add product to cart
+ * @route   DELETE /api/v1/cart/:itemId
+ * @access  Private/ User
+ */
+export const deleteItemFromCart = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
