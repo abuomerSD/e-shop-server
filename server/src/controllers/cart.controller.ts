@@ -14,7 +14,7 @@ export const addProductToCart = asyncHandler(
 );
 
 /**
- * @desc    Add product to cart
+ * @desc    Get Cart For the logged User
  * @route   GET /api/v1/cart
  * @access  Private/ User
  */
@@ -23,7 +23,7 @@ export const getLoggedUserCart = asyncHandler(
 );
 
 /**
- * @desc    Add product to cart
+ * @desc    Delete Logged user cart and cart items
  * @route   DELETE /api/v1/cart
  * @access  Private/ User
  */
@@ -32,7 +32,7 @@ export const clearLoggedUserCart = asyncHandler(
 );
 
 /**
- * @desc    Add product to cart
+ * @desc    Update Item Quantity
  * @route   PUT /api/v1/cart/:itemId
  * @access  Private/ User
  */
@@ -41,7 +41,7 @@ export const updateItemQuantity = asyncHandler(
 );
 
 /**
- * @desc    Add product to cart
+ * @desc    Delete Item From Cart
  * @route   DELETE /api/v1/cart/:itemId
  * @access  Private/ User
  */
