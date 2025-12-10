@@ -5,6 +5,7 @@ import sequelize from "../config/sequelize.config";
 import Category from "./category.model";
 import SubCategory from "./subCategory.model";
 import Brand from "./brand.model";
+import CartItem from "./cartItems.model";
 
 // 1️⃣ DB Attributes
 export interface ProductAttributes {
@@ -177,6 +178,11 @@ Product.belongsToMany(SubCategory, {
   foreignKey: "productId",
   otherKey: "subCategoryId",
   as: "subCategories",
+});
+
+Product.hasMany(CartItem, {
+  foreignKey: "productId",
+  as: "cartItems",
 });
 
 export default Product;

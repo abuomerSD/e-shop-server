@@ -115,7 +115,24 @@ export const applyCouponToCart = asyncHandler(
  * @access  Private/ User
  */
 export const getLoggedUserCart = asyncHandler(
-  async (req: Request, res: Response) => {}
+  async (req: Request, res: Response) => {
+    const userId = req.user.id;
+    const cart = await Cart.findOne({
+      where: { userId },
+      include: [
+        {
+          model: CartItem,
+          as: "cartItem",
+          attributes: ["productId", "cartId"],
+        },
+      ],
+    });
+
+    res.status(200).json({
+      status: "success",
+      cart,
+    });
+  }
 );
 
 /**

@@ -1,9 +1,6 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/sequelize.config";
 
-import User from "./user.model";
-import Product from "./product.model";
-
 // 1️⃣ DB Attributes
 export interface CartAttributes {
   id: string;
@@ -71,18 +68,5 @@ Cart.init(
     timestamps: true,
   }
 );
-
-// 5️⃣ Associations
-Cart.belongsTo(User, {
-  foreignKey: "userId",
-  as: "user",
-});
-
-Cart.belongsToMany(Product, {
-  through: "CartItems",
-  foreignKey: "cartId",
-  otherKey: "productId",
-  as: "products",
-});
 
 export default Cart;

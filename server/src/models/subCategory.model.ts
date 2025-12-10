@@ -1,7 +1,6 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import slugify from "slugify";
 import sequelize from "../config/sequelize.config";
-import Category from "./category.model";
 
 // 1️⃣ Attributes in DB
 export interface SubCategoryAttributes {
@@ -61,9 +60,9 @@ SubCategory.init(
       onDelete: "CASCADE",
     },
     image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    }
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,
@@ -78,16 +77,5 @@ SubCategory.init(
     },
   }
 );
-
-// 5️⃣ Associations
-Category.hasMany(SubCategory, {
-  foreignKey: "categoryId",
-  as: "subCategories",
-});
-
-SubCategory.belongsTo(Category, {
-  foreignKey: "categoryId",
-  as: "category",
-});
 
 export default SubCategory;

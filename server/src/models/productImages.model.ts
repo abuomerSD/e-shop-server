@@ -2,9 +2,6 @@ import { Model, DataTypes, Optional } from "sequelize";
 import slugify from "slugify";
 import sequelize from "../config/sequelize.config";
 
-import Category from "./category.model";
-import SubCategory from "./subCategory.model";
-import Brand from "./brand.model";
 import Product from "./product.model";
 
 // 1️⃣ DB Attributes
@@ -59,9 +56,4 @@ ProductImages.init(
   }
 );
 
-// 5️⃣ Associations
-ProductImages.belongsTo(Product);
-
-Product.hasMany(ProductImages);
-
-export default Product;
+export default ProductImages;

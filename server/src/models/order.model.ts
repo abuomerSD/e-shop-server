@@ -3,9 +3,6 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/sequelize.config";
 
-import User from "./user.model";
-import Product from "./product.model";
-
 // 1️⃣ Attributes
 export interface OrderAttributes {
   id: string;
@@ -137,18 +134,5 @@ Order.init(
     timestamps: true,
   }
 );
-
-// 5️⃣ Associations
-Order.belongsTo(User, {
-  foreignKey: "userId",
-  as: "user",
-});
-
-Order.belongsToMany(Product, {
-  through: "OrderItems",
-  foreignKey: "orderId",
-  otherKey: "productId",
-  as: "products",
-});
 
 export default Order;

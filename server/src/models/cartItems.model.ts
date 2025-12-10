@@ -2,9 +2,6 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/sequelize.config";
 
-import Cart from "./cart.model";
-import Product from "./product.model";
-
 // 1️⃣ DB Attributes
 export interface CartItemAttributes {
   id: string;
@@ -75,16 +72,5 @@ CartItem.init(
     timestamps: true,
   }
 );
-
-// 5️⃣ Associations
-CartItem.belongsTo(Cart, {
-  foreignKey: "cartId",
-  as: "cart",
-});
-
-CartItem.belongsTo(Product, {
-  foreignKey: "productId",
-  as: "product",
-});
 
 export default CartItem;
