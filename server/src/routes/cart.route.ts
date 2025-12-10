@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addProductToCart,
+  applyCouponToCart,
   clearLoggedUserCart,
   deleteItemFromCart,
   getLoggedUserCart,
@@ -21,6 +22,8 @@ router
   .get(getLoggedUserCart)
   .post(addProductToCart)
   .delete(clearLoggedUserCart);
+
+router.route("/apply-coupon").post(applyCouponToCart);
 
 router.route("/:itemId").put(updateItemQuantity).delete(deleteItemFromCart);
 

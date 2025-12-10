@@ -14,15 +14,14 @@ import {
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router
-  .route("/")
-  .get(findAll)
-  .post(protect, allowedTo("admin"), createCouponValidator, create);
+router.use(protect, allowedTo("admin"));
+
+router.route("/").get(findAll).post(createCouponValidator, create);
 
 router
   .route("/:id")
-  .get(protect, allowedTo("admin"), findOne)
-  .put(protect, allowedTo("admin"), updateCouponValidator, updateOne)
-  .delete(protect, allowedTo("admin"), deleteCouponValidator, deleteOne);
+  .get(findOne)
+  .put(updateCouponValidator, updateOne)
+  .delete(deleteCouponValidator, deleteOne);
 
 export default router;

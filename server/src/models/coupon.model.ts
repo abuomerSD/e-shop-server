@@ -48,11 +48,11 @@ Coupon.init(
     },
     expire: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
     },
     discount: {
       type: DataTypes.FLOAT,
-      allowNull: true,
+      allowNull: false,
     },
   },
   {
