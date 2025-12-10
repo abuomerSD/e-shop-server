@@ -3,7 +3,6 @@ import Product from "./product.model";
 import CartItem from "./cartItems.model";
 import Cart from "./cart.model";
 import Order from "./order.model";
-import ProductImages from "./productImages.model";
 import Review from "./review.model";
 import Category from "./category.model";
 import SubCategory from "./subCategory.model";
@@ -49,11 +48,6 @@ Order.belongsToMany(Product, {
   otherKey: "productId",
   as: "products",
 });
-
-// product images
-ProductImages.belongsTo(Product);
-
-Product.hasMany(ProductImages);
 
 // review
 Review.belongsTo(User, {

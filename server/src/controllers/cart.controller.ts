@@ -122,7 +122,7 @@ export const getLoggedUserCart = asyncHandler(
       include: [
         {
           model: CartItem,
-          as: "cartItem",
+          as: "cartItems",
           attributes: ["productId", "cartId"],
         },
       ],

@@ -4,6 +4,7 @@ import { testDatabaseConnection } from "./config/sequelize.config";
 import morgan from "morgan";
 import attachRoutes from "./utils/attachRoutes";
 import errorHandler from "./middlewares/errorHandler";
+import "./models/index";
 
 const app = express();
 
