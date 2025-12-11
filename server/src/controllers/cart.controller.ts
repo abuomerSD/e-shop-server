@@ -15,11 +15,6 @@ import ApiError from "../utils/apiError";
  */
 export const addProductToCart = asyncHandler(
   async (req: Request, res: Response) => {
-    // user id
-    // total cart price
-    // total price after discount
-    // quantity
-
     const userId = req.user.id;
     const { productId } = req.body;
     const { quantity } = req.body;
