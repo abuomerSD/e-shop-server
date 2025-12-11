@@ -22,6 +22,8 @@ export const createProductValidator = [
       }
     }),
   body("description").notEmpty().withMessage("Description is required"),
+  // price
+  // quantity
   validatorMiddleware,
 ];
 

@@ -13,12 +13,12 @@ Cart.belongsTo(User, {
   as: "user",
 });
 
-Cart.belongsToMany(Product, {
-  through: "CartItems",
-  foreignKey: "cartId",
-  otherKey: "productId",
-  as: "products",
-});
+// Cart.belongsToMany(Product, {
+//   through: "CartItems",
+//   foreignKey: "cartId",
+//   otherKey: "productId",
+//   as: "products",
+// });
 
 Cart.hasMany(CartItem, {
   foreignKey: "cartId",
@@ -42,12 +42,12 @@ Order.belongsTo(User, {
   as: "user",
 });
 
-Order.belongsToMany(Product, {
-  through: "OrderItems",
-  foreignKey: "orderId",
-  otherKey: "productId",
-  as: "products",
-});
+// Order.belongsToMany(Product, {
+//   through: "OrderItems",
+//   foreignKey: "orderId",
+//   otherKey: "productId",
+//   as: "products",
+// });
 
 // review
 Review.belongsTo(User, {
@@ -64,6 +64,8 @@ Product.hasMany(Review, {
   foreignKey: "productId",
   as: "reviews",
 });
+
+Product.hasMany(CartItem, { foreignKey: "productId" });
 
 // subcategory
 Category.hasMany(SubCategory, {

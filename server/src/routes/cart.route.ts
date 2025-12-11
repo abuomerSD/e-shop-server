@@ -25,6 +25,6 @@ router
 
 router.route("/apply-coupon").post(applyCouponToCart);
 
-router.route("/:itemId").put(updateItemQuantity).delete(deleteItemFromCart);
+router.route("/:productId").put(updateItemQuantity).delete(deleteItemFromCart);
 
 export default router;

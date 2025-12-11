@@ -6,9 +6,9 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/env.config";
 import ApiError from "../utils/apiError";
 
-
 // ensure JWT_SECRET is string
 const JWT_SECRET_KEY = JWT_SECRET as string;
+const JWT_EXPIRES_IN = "7d";
 
 /**
  * @desc    Sign up a New User
@@ -19,15 +19,15 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   // create user in the database
-  const user = await User.create({
+  const user = (await User.create({
     name,
     email,
     password,
-  }) as unknown as UserInstance;
+  })) as unknown as UserInstance;
 
   // create jwt token
   const token = jwt.sign({ id: user.id }, JWT_SECRET_KEY, {
-    expiresIn: "1d",
+    expiresIn: JWT_EXPIRES_IN,
   });
 
   // remove password from returned data
@@ -50,7 +50,9 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   // find the user from DB
-  const user = await User.findOne({ where: { email } }) as unknown as UserInstance;
+  const user = (await User.findOne({
+    where: { email },
+  })) as unknown as UserInstance;
 
   if (!user) {
     throw new ApiError(404, "User Not Found");
@@ -68,7 +70,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   // create token
   const token = jwt.sign({ id: user.id }, JWT_SECRET_KEY, {
-    expiresIn: "1d",
+    expiresIn: JWT_EXPIRES_IN,
   });
 
   const userData = user.get({ plain: true });

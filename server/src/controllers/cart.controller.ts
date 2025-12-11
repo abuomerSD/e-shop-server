@@ -123,7 +123,15 @@ export const getLoggedUserCart = asyncHandler(
         {
           model: CartItem,
           as: "cartItems",
-          attributes: ["productId", "cartId"],
+          attributes: ["productId", "cartId", "quantity"],
+          include: [
+            {
+              model: Product,
+              as: "product",
+              foreignKey: "productId",
+              attributes: ["title"],
+            },
+          ],
         },
       ],
     });
@@ -141,25 +149,85 @@ export const getLoggedUserCart = asyncHandler(
  * @access  Private/ User
  */
 export const clearLoggedUserCart = asyncHandler(
-  async (req: Request, res: Response) => {}
+  async (req: Request, res: Response) => {
+    const { cartId } = req.body;
+    const cart = await Cart.findOne({ where: { id: cartId } });
+    if (cart) {
+      await cart.destroy();
+    }
+
+    res.status(200).json({
+      status: "success",
+    });
+  }
 );
 
 /**
  * @desc    Update Item Quantity
- * @route   PUT /api/v1/cart/:itemId
+ * @route   PUT /api/v1/cart/:productId
  * @access  Private/ User
  */
 export const updateItemQuantity = asyncHandler(
-  async (req: Request, res: Response) => {}
+  async (req: Request, res: Response) => {
+    const { productId } = req.params;
+    const { cartId, quantity } = req.body;
+
+    // update qty
+    const cartItem = await CartItem.findOne({ where: { cartId, productId } });
+    if (cartItem) {
+      cartItem.quantity = quantity;
+      await cartItem.save();
+    }
+
+    // update cart total price
+    const cart = await Cart.findOne({ where: { id: cartId } });
+    if (cart) {
+      cart.totalCartPrice = await calculateCartTotalPrice(cartId);
+      cart.totalPriceAfterDiscount = 0;
+      await cart.save();
+    }
+
+    res.status(200).json({
+      status: "success",
+      cart,
+    });
+  }
 );
 
 /**
  * @desc    Delete Item From Cart
- * @route   DELETE /api/v1/cart/:itemId
+ * @route   DELETE /api/v1/cart/:productId
  * @access  Private/ User
  */
 export const deleteItemFromCart = asyncHandler(
-  async (req: Request, res: Response) => {}
+  async (req: Request, res: Response) => {
+    const { productId } = req.params;
+    const { cartId } = req.body;
+
+    // delete product from cart
+    const cartItem = await CartItem.findOne({ where: { productId, cartId } });
+    if (cartItem) {
+      await cartItem?.destroy();
+    }
+
+    // update cart total
+    const cart = await Cart.findOne({ where: { id: cartId } });
+    if (cart) {
+      cart.totalCartPrice = await calculateCartTotalPrice(cartId);
+      cart.totalPriceAfterDiscount = 0;
+
+      // delete cart if the total = 0
+      if (cart.totalCartPrice === 0) {
+        await cart.destroy();
+      } else {
+        await cart.save();
+      }
+    }
+
+    res.status(200).json({
+      status: "success",
+    });
+  }
 );
 
 async function calculateCartTotalPrice(cartId: string): Promise<number> {
