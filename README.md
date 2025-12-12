@@ -113,7 +113,7 @@ npm install typescript
 ## 3️⃣ Compile TypeScript
 
 ```javascript
-tsc;
+tsc
 ```
 
 ## 4️⃣ Create a .env File
