@@ -4,6 +4,7 @@ import { testDatabaseConnection } from "./config/sequelize.config";
 import morgan from "morgan";
 import attachRoutes from "./utils/attachRoutes";
 import errorHandler from "./middlewares/errorHandler";
+import { swaggerDocs } from "./swagger";
 import "./models/index";
 
 const app = express();
@@ -17,6 +18,9 @@ testDatabaseConnection();
 
 // routes
 attachRoutes(app);
+
+// swagger
+swaggerDocs(app);
 
 // Unhandled Rejections
 process.on("unhandledRejection", (error: any) => {

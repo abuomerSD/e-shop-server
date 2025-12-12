@@ -5,36 +5,36 @@ import Brand from "../models/brand.model";
 const factory = new ControllerFactory(Brand);
 
 /**
- * @desc    Create a new category
- * @route   POST /api/v1/categories
+ * @desc    Create a new brand
+ * @route   POST /api/v1/brands
  * @access  Public
  */
 export const { create } = factory;
 
 /**
- * @desc    Get a single category by ID
- * @route   GET /api/v1/categories/:id
+ * @desc    Get a single brand by ID
+ * @route   GET /api/v1/brands/:id
  * @access  Public
  */
 export const { findOne } = factory;
 
 /**
- * @desc    Get all categories
- * @route   GET /api/v1/categories
+ * @desc    Get all brands
+ * @route   GET /api/v1/brands
  * @access  Private
  */
 export const { findAll } = factory;
 
 /**
- * @desc    Update a category by ID
- * @route   PUT /api/v1/categories/:id
+ * @desc    Update a brand by ID
+ * @route   PUT /api/v1/brands/:id
  * @access  Private
  */
 export const { updateOne } = factory;
 
 /**
- * @desc    Delete a category by ID
- * @route   DELETE /api/v1/categories/:id
+ * @desc    Delete a brand by ID
+ * @route   DELETE /api/v1/brands/:id
  * @access  Private
  */
 export const { deleteOne } = factory;
