@@ -98,10 +98,14 @@ Contributions, suggestions, and feedback are welcome!
 
 # 🚀 How to Run the API Server
 
-## 1️⃣ Clone the Repository
+## 1️⃣ Clone the Repository 
 
 ```
 git clone https://github.com/abuomerSD/e-shop-server.git
+```
+then switch the directory to server
+``` 
+cd ./server
 ```
 
 ## 2️⃣ Install TypeScript
