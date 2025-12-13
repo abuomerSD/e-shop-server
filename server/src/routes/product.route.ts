@@ -73,16 +73,20 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               title:
  *                 type: string
- *               expire:
- *                 type: date
- *               discount:
- *                 type: number
+ *               description:
+ *                 type: string
+ *               categoryId:
+ *                 type: string
+ *               images:
+ *                 type: images []
+ *               imageCover:
+ *                 type: image
  *           example:
- *                name: "new Product"
- *                expire: "11-12-2026"
- *                discount: 10
+ *                title: "new Product"
+ *                description: "description"
+ *                categoryId: "448ae829-bfc7-4b72-a1ec-179a6d381194"
  *     responses:
  *       201:
  *         description: returns the Created Product, the discount is percentage number
@@ -139,16 +143,20 @@ router
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               title:
  *                 type: string
- *               expire:
- *                 type: date
- *               discount:
- *                 type: number
+ *               description:
+ *                 type: string
+ *               categoryId:
+ *                 type: string
+ *               images:
+ *                 type: images []
+ *               imageCover:
+ *                 type: image
  *           example:
- *                name: "new Product"
- *                expire: "11-12-2026"
- *                discount: 10
+ *                title: "new Product"
+ *                description: "description"
+ *                categoryId: "448ae829-bfc7-4b72-a1ec-179a6d381194"
  *     responses:
  *       200:
  *         description: returns the Updated Product
