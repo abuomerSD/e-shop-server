@@ -153,3 +153,6 @@ JWT_SECRET = 4c446580dc786536f9193324e353d831637faac161d3779c8853e852c8d44fac07c
 ```
 node ./dist/src/app.js
 ```
+
+#### Swagger Docs For the API:
+#### `(BACKEND_URL)/api-docs -> for example (http://localhost:5000/api-docs/)`
