@@ -100,7 +100,7 @@ router
  * @swagger
  * /api/v1/brands/{id}:
  *   get:
- *     summary: Get All Brands
+ *     summary: Get Specific Brand By Id
  *     tags: [Brands]
  *     parameters:
  *       - in: path

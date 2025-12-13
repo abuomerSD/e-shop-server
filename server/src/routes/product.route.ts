@@ -16,6 +16,77 @@ import { uploadProductImages } from "../middlewares/uploadImage.js";
 import { resizeImage } from "../middlewares/resizeImage.js";
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/v1/products:
+ *   get:
+ *     summary: Get All Products
+ *     tags: [Products]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Page Number
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Records Limit In the Page
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: sort
+ *         required: false
+ *         description: Sort the records By the column name, if You enter (-) before the column name the sort will be DESC
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: searchCol
+ *         required: false
+ *         description: The column name that you will use for searching
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         description: The Search Value
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: returns all Products, you can apply paginations, sorting and filtering using the params
+ */
+
+/**
+ * @swagger
+ * /api/v1/products:
+ *   post:
+ *     summary: Create a New Product
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               expire:
+ *                 type: date
+ *               discount:
+ *                 type: number
+ *           example:
+ *                name: "new Product"
+ *                expire: "11-12-2026"
+ *                discount: 10
+ *     responses:
+ *       201:
+ *         description: returns the Created Product, the discount is percentage number
+ */
 router
   .route("/")
   .get(findAll)
@@ -28,6 +99,80 @@ router
     create
   );
 
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *   get:
+ *     summary: Get Specific Product By Id
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Product Id
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: returns specific Product by its Id
+ */
+
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *   put:
+ *     summary: Update a Specific Product
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Product Id
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               expire:
+ *                 type: date
+ *               discount:
+ *                 type: number
+ *           example:
+ *                name: "new Product"
+ *                expire: "11-12-2026"
+ *                discount: 10
+ *     responses:
+ *       200:
+ *         description: returns the Updated Product
+ */
+
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *   delete:
+ *     summary: Delete a Specific Product
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Product Id
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: returns the Updated Product
+ */
 router
   .route("/:id")
   .get(findOne)
