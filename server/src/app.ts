@@ -6,6 +6,7 @@ import attachRoutes from "./utils/attachRoutes";
 import errorHandler from "./middlewares/errorHandler";
 import { swaggerDocs } from "./swagger";
 import "./models/index";
+import { insertDefaultUser } from "./utils/insertDefaultUser";
 
 const app = express();
 
@@ -15,6 +16,9 @@ app.use(express.json());
 
 // test database connection
 testDatabaseConnection();
+
+// insert default user
+insertDefaultUser();
 
 // routes
 attachRoutes(app);

@@ -1,8 +1,4 @@
-import {
-  Model,
-  DataTypes,
-  Optional
-} from "sequelize";
+import { Model, DataTypes, Optional } from "sequelize";
 import slugify from "slugify";
 import bcrypt from "bcrypt";
 import sequelize from "../config/sequelize.config";
@@ -28,9 +24,7 @@ export interface UserAttributes {
 interface UserCreationAttributes
   extends Optional<UserAttributes, "id" | "slug" | "role" | "active"> {}
 
-export interface UserInstance
-  extends Model<UserAttributes>,
-    UserAttributes {}
+export interface UserInstance extends Model<UserAttributes>, UserAttributes {}
 
 // 3️⃣ Model class with typing
 class User

@@ -20,3 +20,8 @@ export const API_TEST_URL = process.env.API_TEST_URL || "";
 
 // jwt
 export const JWT_SECRET = process.env.JWT_SECRET || "";
+
+// default admin user
+export const DEFAULT_USER_NAME = process.env.DEFAULT_USER_NAME;
+export const DEFAULT_USER_EMAIL = process.env.DEFAULT_USER_EMAIL;
+export const DEFAULT_USER_PASSWORD = process.env.DEFAULT_USER_PASSWORD;
