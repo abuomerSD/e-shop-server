@@ -141,6 +141,11 @@ API_TEST_URL = http://localhost:5000/api/v1
 
 # jwt
 JWT_SECRET = 4c446580dc786536f9193324e353d831637faac161d3779c8853e852c8d44fac07cffbff2917c38be87c9e344252d7687bca985a84398f1c780d4988d2a80581
+
+# default admin user
+DEFAULT_USER_NAME = admin
+DEFAULT_USER_EMAIL = admin@admin.com
+DEFAULT_USER_PASSWORD = password1
 ```
 
 ## 5️⃣ Install & Configure MySQL
