@@ -20,7 +20,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/brands:
  *   get:
- *     summary: Get All Brands
+ *     summary: Get All Brands - Public
  *     tags: [Brands]
  *     parameters:
  *       - in: query
@@ -62,7 +62,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/brands:
  *   post:
- *     summary: Create a New Brand
+ *     summary: Create a New Brand - Private admin | manager
  *     tags: [Brands]
  *     security:
  *       - bearerAuth: []
@@ -100,7 +100,7 @@ router
  * @swagger
  * /api/v1/brands/{id}:
  *   get:
- *     summary: Get Specific Brand By Id
+ *     summary: Get Specific Brand By Id - Public
  *     tags: [Brands]
  *     parameters:
  *       - in: path
@@ -118,7 +118,7 @@ router
  * @swagger
  * /api/v1/brands/{id}:
  *   put:
- *     summary: Update a Specific Brand
+ *     summary: Update a Specific Brand - Private admin | manager
  *     tags: [Brands]
  *     parameters:
  *       - in: path
@@ -152,7 +152,7 @@ router
  * @swagger
  * /api/v1/brands/{id}:
  *   delete:
- *     summary: Delete a Specific Brand
+ *     summary: Delete a Specific Brand - Private admin | manager
  *     tags: [Brands]
  *     parameters:
  *       - in: path

@@ -14,11 +14,13 @@ import {
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
+router.use(protect, allowedTo("admin", "manager"));
+
 /**
  * @swagger
  * /api/v1/users:
  *   get:
- *     summary: Get All Users
+ *     summary: Get All Users - Private admin | manager
  *     tags: [Users]
  *     parameters:
  *       - in: query
@@ -60,7 +62,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/users:
  *   post:
- *     summary: Create a New User
+ *     summary: Create a New User - Private admin | manager
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -90,16 +92,13 @@ const router = express.Router();
  *       201:
  *         description: returns the Created User, the discount is percentage number
  */
-router
-  .route("/")
-  .get(findAll)
-  .post(protect, allowedTo("admin"), createUserValidator, create);
+router.route("/").get(findAll).post(createUserValidator, create);
 
 /**
  * @swagger
  * /api/v1/users/{id}:
  *   get:
- *     summary: Get Specific User By Id
+ *     summary: Get Specific User By Id - Private admin | manager
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -117,7 +116,7 @@ router
  * @swagger
  * /api/v1/users/{id}:
  *   put:
- *     summary: Update a Specific User
+ *     summary: Update a Specific User - Private admin | manager
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -159,7 +158,7 @@ router
  * @swagger
  * /api/v1/users/{id}:
  *   delete:
- *     summary: Delete a Specific User
+ *     summary: Delete a Specific User - Private admin | manager
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -176,8 +175,8 @@ router
  */
 router
   .route("/:id")
-  .get(protect, allowedTo("admin"), findOne)
-  .put(protect, allowedTo("admin"), updateUserValidator, updateOne)
-  .delete(protect, allowedTo("admin"), deleteUserValidator, deleteOne);
+  .get(findOne)
+  .put(updateUserValidator, updateOne)
+  .delete(deleteUserValidator, deleteOne);
 
 export default router;

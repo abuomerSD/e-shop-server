@@ -14,13 +14,13 @@ import {
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router.use(protect, allowedTo("admin"));
+router.use(protect, allowedTo("admin", "manager"));
 
 /**
  * @swagger
  * /api/v1/coupons:
  *   get:
- *     summary: Get All Coupons
+ *     summary: Get All Coupons - Private admin | manager
  *     tags: [Coupons]
  *     parameters:
  *       - in: query
@@ -62,7 +62,7 @@ router.use(protect, allowedTo("admin"));
  * @swagger
  * /api/v1/coupons:
  *   post:
- *     summary: Create a New Coupon
+ *     summary: Create a New Coupon - Private admin | manager
  *     tags: [Coupons]
  *     security:
  *       - bearerAuth: []
@@ -93,7 +93,7 @@ router.route("/").get(findAll).post(createCouponValidator, create);
  * @swagger
  * /api/v1/coupons/{id}:
  *   get:
- *     summary: Get Specific Coupon By Id
+ *     summary: Get Specific Coupon By Id - Private admin | manager
  *     tags: [Coupons]
  *     parameters:
  *       - in: path
@@ -111,7 +111,7 @@ router.route("/").get(findAll).post(createCouponValidator, create);
  * @swagger
  * /api/v1/coupons/{id}:
  *   put:
- *     summary: Update a Specific Coupon
+ *     summary: Update a Specific Coupon - Private admin | manager
  *     tags: [Coupons]
  *     parameters:
  *       - in: path
@@ -148,7 +148,7 @@ router.route("/").get(findAll).post(createCouponValidator, create);
  * @swagger
  * /api/v1/coupons/{id}:
  *   delete:
- *     summary: Delete a Specific Coupon
+ *     summary: Delete a Specific Coupon - Private admin | manager
  *     tags: [Coupons]
  *     parameters:
  *       - in: path

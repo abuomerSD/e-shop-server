@@ -11,7 +11,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/auth/signup:
  *   post:
- *     summary: Sign up a New User
+ *     summary: Sign up a New User - Public
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -40,7 +40,7 @@ router.route("/signup").post(signupValidator, signup);
  * @swagger
  * /api/v1/auth/login:
  *   post:
- *     summary: Login a Registered User
+ *     summary: Login a Registered User - Public
  *     tags: [Auth]
  *     requestBody:
  *       required: true

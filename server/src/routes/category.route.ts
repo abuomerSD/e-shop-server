@@ -20,7 +20,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/categories:
  *   get:
- *     summary: Get All Categories
+ *     summary: Get All Categories - Public
  *     tags: [Categories]
  *     parameters:
  *       - in: query
@@ -62,7 +62,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/categories:
  *   post:
- *     summary: Create a New Category
+ *     summary: Create a New Category - Private admin | manager
  *     tags: [Categories]
  *     security:
  *       - bearerAuth: []
@@ -100,7 +100,7 @@ router
  * @swagger
  * /api/v1/categories/{id}:
  *   get:
- *     summary: Get Specific Category By Id
+ *     summary: Get Specific Category By Id - Public
  *     tags: [Categories]
  *     parameters:
  *       - in: path
@@ -118,7 +118,7 @@ router
  * @swagger
  * /api/v1/categories/{id}:
  *   put:
- *     summary: Update a Specific Category
+ *     summary: Update a Specific Category - Private admin | manager
  *     tags: [Categories]
  *     parameters:
  *       - in: path
@@ -152,7 +152,7 @@ router
  * @swagger
  * /api/v1/categories/{id}:
  *   delete:
- *     summary: Delete a Specific Category
+ *     summary: Delete a Specific Category - Private admin | manager
  *     tags: [Categories]
  *     parameters:
  *       - in: path

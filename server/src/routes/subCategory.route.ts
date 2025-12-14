@@ -20,7 +20,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/subCategories:
  *   get:
- *     summary: Get All SubCategories
+ *     summary: Get All SubCategories - Public
  *     tags: [SubCategories]
  *     parameters:
  *       - in: query
@@ -62,7 +62,7 @@ const router = express.Router();
  * @swagger
  * /api/v1/subCategories:
  *   post:
- *     summary: Create a New SubCategory
+ *     summary: Create a New SubCategory - Private admin | manager
  *     tags: [SubCategories]
  *     security:
  *       - bearerAuth: []
@@ -102,7 +102,7 @@ router
  * @swagger
  * /api/v1/subCategories/{id}:
  *   get:
- *     summary: Get Specific SubCategory By Id
+ *     summary: Get Specific SubCategory By Id - Public
  *     tags: [SubCategories]
  *     parameters:
  *       - in: path
@@ -120,7 +120,7 @@ router
  * @swagger
  * /api/v1/subCategories/{id}:
  *   put:
- *     summary: Update a Specific SubCategory
+ *     summary: Update a Specific SubCategory - Private admin | manager
  *     tags: [SubCategories]
  *     parameters:
  *       - in: path
@@ -156,7 +156,7 @@ router
  * @swagger
  * /api/v1/subCategories/{id}:
  *   delete:
- *     summary: Delete a Specific SubCategory
+ *     summary: Delete a Specific SubCategory - Private admin | manager
  *     tags: [SubCategories]
  *     parameters:
  *       - in: path
