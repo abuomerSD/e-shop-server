@@ -35,7 +35,7 @@ export const addProductToCart = asyncHandler(
     }
 
     // check if product already added
-    const cartItem = await CartItem.findOne({ where: { cartId } });
+    const cartItem = await CartItem.findOne({ where: { productId } });
     if (!cartItem) {
       await CartItem.create({
         cartId,

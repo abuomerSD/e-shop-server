@@ -108,12 +108,15 @@ then switch the directory to server
 cd ./server
 ```
 
-## 2️⃣ Install TypeScript
+## 2️⃣ Install TypeScript & Project Dependencies
 
 ```
 npm install typescript
 ```
 
+```
+npm install
+```
 ## 3️⃣ Compile TypeScript
 
 ```javascript
