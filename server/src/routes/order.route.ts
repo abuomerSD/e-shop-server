@@ -13,7 +13,7 @@ import {
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router.use(protect, allowedTo("admin", "manager"));
+router.use(protect, allowedTo("user"));
 
 router.route("/").get(findAll);
 router.post("/createCashOrder", createCashOrder);

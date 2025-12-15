@@ -6,6 +6,7 @@ import Order from "./order.model";
 import Review from "./review.model";
 import Category from "./category.model";
 import SubCategory from "./subCategory.model";
+import OrderItem from "./orderItems.model";
 
 // cart
 Cart.belongsTo(User, {
@@ -42,8 +43,23 @@ Order.belongsTo(User, {
   as: "user",
 });
 
+Order.hasMany(OrderItem, {
+  foreignKey: "orderId",
+  as: "OrderItem",
+});
+
+OrderItem.belongsTo(Order, {
+  foreignKey: "orderId",
+  as: "order",
+});
+
+OrderItem.belongsTo(Product, {
+  foreignKey: "productId",
+  as: "product",
+});
+
 // Order.belongsToMany(Product, {
-//   through: "OrderItems",
+//   through: "OrderItem",
 //   foreignKey: "orderId",
 //   otherKey: "productId",
 //   as: "products",

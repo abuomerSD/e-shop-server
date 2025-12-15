@@ -30,6 +30,7 @@ class Cart
 
   public totalCartPrice!: number | null;
   public totalPriceAfterDiscount!: number | null;
+  public cartItems!: object[];
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
