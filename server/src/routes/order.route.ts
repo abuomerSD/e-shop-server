@@ -1,10 +1,9 @@
 import express from "express";
 import {
-  create,
-  findOne,
   findAll,
-  updateOne,
-  deleteOne,
+  findOne,
+  createCashOrder,
+  createOnlineOrder,
 } from "../controllers/order.controller";
 import {
   createOrderValidator,
@@ -14,15 +13,11 @@ import {
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router
-  .route("/")
-  .get(findAll)
-  .post(protect, allowedTo("admin"), createOrderValidator, create);
+router.use(protect, allowedTo("admin", "manager"));
 
-router
-  .route("/:id")
-  .get(protect, allowedTo("admin"), findOne)
-  .put(protect, allowedTo("admin"), updateOrderValidator, updateOne)
-  .delete(protect, allowedTo("admin"), deleteOrderValidator, deleteOne);
+router.route("/").get(findAll);
+router.post("/createCashOrder", createCashOrder);
+router.post("/createOnlineOrder", createOnlineOrder);
+router.route("/:id").get(protect, allowedTo("admin"), findOne);
 
 export default router;

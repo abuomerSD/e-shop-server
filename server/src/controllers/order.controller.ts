@@ -1,15 +1,16 @@
-/* eslint-disable import/extensions */
+import { Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import Order from "../models/order.model";
 import ControllerFactory from "./controllerFactory";
-import order from "../models/order.model";
 
-const factory = new ControllerFactory(order);
+const factory = new ControllerFactory(Order);
 
 /**
- * @desc    Create a new order
- * @route   POST /api/v1/orders
- * @access  Public
+ * @desc    Get All orders
+ * @route   GET /api/v1/orders
+ * @access  Private - admin | manager
  */
-export const { create } = factory;
+export const { findAll } = factory;
 
 /**
  * @desc    Get a single order by ID
@@ -18,23 +19,15 @@ export const { create } = factory;
  */
 export const { findOne } = factory;
 
-/**
- * @desc    Get all order
- * @route   GET /api/v1/orders
- * @access  Private
- */
-export const { findAll } = factory;
+// create cash order
+export const createCashOrder = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
 
-/**
- * @desc    Update a order by ID
- * @route   PUT /api/v1/orders/:id
- * @access  Private
- */
-export const { updateOne } = factory;
+// create online order
+export const createOnlineOrder = asyncHandler(
+  async (req: Request, res: Response) => {}
+);
 
-/**
- * @desc    Delete a order by ID
- * @route   DELETE /api/v1/orders/:id
- * @access  Private
- */
-export const { deleteOne } = factory;
+// make payment
+// make delivered
