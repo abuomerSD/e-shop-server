@@ -4,6 +4,8 @@ import Order from "../models/order.model";
 import ControllerFactory from "./controllerFactory";
 import Cart from "../models/cart.model";
 import CartItem from "../models/cartItems.model";
+import OrderItem, { OrderItemAttributes } from "../models/orderItems.model";
+import { TPaymentMethodTypes } from "../types/paymentMothodTypes";
 
 const factory = new ControllerFactory(Order);
 
@@ -21,37 +23,95 @@ export const { findAll } = factory;
  */
 export const { findOne } = factory;
 
-// create cash order
+/**
+ * @desc    Create Cash Order
+ * @route   POST /api/v1/orders/createCashOrder
+ * @access  Public
+ */
 export const createCashOrder = asyncHandler(
   async (req: Request, res: Response) => {
-    // create order
     const { userId, shippingAddress, cartId } = req.body;
 
     const paymentMethodType = "cash";
 
-    // get the cart
-    const cart = await Cart.findOne({
-      where: { id: cartId },
-      include: [{ model: CartItem, as: "cartItems", foreignKey: "cartId" }],
-    });
+    const { order, orderItems } = await createOrder(
+      cartId,
+      userId,
+      shippingAddress,
+      paymentMethodType
+    );
 
-    // calculate Tax Price
-    // calculate shipping price
-
-    if (cart) {
-      console.log("cartItems", cart.cartItems);
-    }
-
-    res.status(201).json({ status: "success" });
-
-    // create orderItems
+    res.status(201).json({ status: "success", data: { order, orderItems } });
   }
 );
 
 // create online order
 export const createOnlineOrder = asyncHandler(
-  async (req: Request, res: Response) => {}
+  async (req: Request, res: Response) => {
+    const { userId, shippingAddress, cartId } = req.body;
+
+    const paymentMethodType = "card";
+
+    const { order, orderItems } = await createOrder(
+      cartId,
+      userId,
+      shippingAddress,
+      paymentMethodType
+    );
+
+    res.status(201).json({ status: "success", data: { order, orderItems } });
+  }
 );
+
+const createOrder = async (
+  cartId: string,
+  userId: string,
+  shippingAddress: object,
+  paymentMethodType: TPaymentMethodTypes
+) => {
+  // get the cart
+  const cart = await Cart.findOne({
+    where: { id: cartId },
+    include: [{ model: CartItem, as: "cartItems", foreignKey: "cartId" }],
+  });
+
+  // calculate shipping price
+
+  if (cart) {
+    console.log("cartItems", cart.cartItems);
+  }
+
+  // create order
+
+  const order = await Order.create({
+    userId,
+    shippingAddress,
+    paymentMethodType,
+    totalOrderPrice: cart?.totalCartPrice,
+  });
+
+  // create orderItems
+  const orderId = order.id;
+  let orderItemsObj: OrderItemAttributes[] = [];
+
+  if (cart?.cartItems) {
+    orderItemsObj = cart.cartItems.map((item) => {
+      return {
+        orderId,
+        quantity: item.quantity,
+        productId: item.productId,
+      };
+    });
+  }
+
+  const orderItems = await OrderItem.bulkCreate(orderItemsObj);
+
+  // clear cart & cart items
+  await cart?.destroy();
+  await CartItem.destroy({ where: { cartId } });
+
+  return { order, orderItems };
+};
 
 // make payment
 // make delivered

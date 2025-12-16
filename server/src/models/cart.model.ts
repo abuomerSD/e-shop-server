@@ -1,5 +1,6 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/sequelize.config";
+import { OrderItemAttributes } from "./orderItems.model";
 
 // 1️⃣ DB Attributes
 export interface CartAttributes {
@@ -30,7 +31,7 @@ class Cart
 
   public totalCartPrice!: number | null;
   public totalPriceAfterDiscount!: number | null;
-  public cartItems!: object[];
+  public cartItems!: OrderItemAttributes[];
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;

@@ -3,7 +3,7 @@ import sequelize from "../config/sequelize.config";
 
 // 1️⃣ DB Attributes
 export interface OrderItemAttributes {
-  id: string;
+  id?: string;
   orderId: string;
   productId: string;
   quantity: number;
