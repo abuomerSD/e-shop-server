@@ -15,10 +15,12 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // test database connection
-testDatabaseConnection();
-
-// insert default user
-insertDefaultUser();
+testDatabaseConnection()
+  .then(() => {
+    // insert default user
+    insertDefaultUser();
+  })
+  .catch((err) => console.log(err));
 
 // routes
 attachRoutes(app);
