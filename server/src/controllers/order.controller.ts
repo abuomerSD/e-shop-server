@@ -165,7 +165,7 @@ export const createInvoice = asyncHandler(
         res.status(201).json({ status: "success" });
       })
       .catch((err) => {
-        console.error(err.data);
+        console.error(err.response.data);
         throw new ApiError(400, err.message);
       });
   }
