@@ -68,7 +68,15 @@ export const createOnlineOrder = asyncHandler(
       paymentMethodType
     );
 
-    res.status(201).json({ status: "success", data: { order, orderItems } });
+    // create moyasar invoice
+    const payment = createInvoice(
+      order.id,
+      `order invoice - order id is ${order.id}`
+    );
+
+    res
+      .status(201)
+      .json({ status: "success", data: { order, orderItems, payment } });
   }
 );
 
@@ -84,6 +92,10 @@ const createOrder = async (
     include: [{ model: CartItem, as: "cartItems", foreignKey: "cartId" }],
   });
 
+  // if cart total = 0 throw error
+  if (cart?.totalPriceAfterDiscount === 0) {
+    throw new ApiError(400, "can't create order for cart with 0 total price");
+  }
   // calculate shipping price
 
   // console.log("cart", cart);
@@ -94,7 +106,7 @@ const createOrder = async (
     userId,
     shippingAddress,
     paymentMethodType,
-    totalOrderPrice: cart?.totalCartPrice,
+    totalOrderPrice: cart?.totalPriceAfterDiscount,
   });
 
   // create orderItems
@@ -122,55 +134,54 @@ const createOrder = async (
 
 // create invoice
 
-export const createInvoice = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { orderId, description } = req.body;
-
-    // get the order amount
-    const order = await Order.findOne({ where: { id: orderId } });
-    let amount = 0;
-    if (order) {
-      amount = order.totalOrderPrice ? order.totalOrderPrice : 0;
-    }
-
-    // console.log("order", order);
-    // console.log("amount", amount);
-
-    // sending create invoice request to moyasar api
-    let data = {
-      amount: amount * 100,
-      description: description,
-      success_url: MOYASAR_SUCCESS_URL,
-      callback_url: MOYASAR_CALLBACK_URL,
-    };
-
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: MOYASAR_URL,
-      auth: {
-        username: MOYASAR_SECRET_KEY,
-        password: "",
-      },
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      data,
-    };
-
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data);
-        res.status(201).json({ status: "success", data: response.data });
-      })
-      .catch((err) => {
-        console.error(err.response.data);
-        throw new ApiError(400, err.message);
-      });
+export const createInvoice = async (orderId: string, description: string) => {
+  // get the order amount
+  const order = await Order.findOne({ where: { id: orderId } });
+  let amount = 0;
+  if (order) {
+    amount = order.totalOrderPrice ? order.totalOrderPrice : 0;
   }
-);
+
+  // console.log("order", order);
+  // console.log("amount", amount);
+
+  // sending create invoice request to moyasar api
+  let data = {
+    amount: amount * 100,
+    description: description,
+    success_url: MOYASAR_SUCCESS_URL,
+    callback_url: MOYASAR_CALLBACK_URL,
+    metadata: {
+      orderId,
+    },
+  };
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: MOYASAR_URL,
+    auth: {
+      username: MOYASAR_SECRET_KEY,
+      password: "",
+    },
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    data,
+  };
+
+  await axios
+    .request(config)
+    .then((response) => {
+      console.log(response.data);
+      return response.data;
+    })
+    .catch((err) => {
+      console.error(err.response.data);
+      throw new ApiError(400, err.message);
+    });
+};
 
 // make invoice payed
 
@@ -178,6 +189,12 @@ export const makePayment = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     console.log("=".repeat(20));
     console.log("req body", req.body);
+    const { status, metadata } = req.body;
+    const order = await Order.findOne({ where: { id: metadata.orderId } });
+    if (status === "paid" && order) {
+      order.isPaid = true;
+      await order.save();
+    }
     next();
   }
 );

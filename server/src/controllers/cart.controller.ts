@@ -58,6 +58,7 @@ export const addProductToCart = asyncHandler(
 
     // update cart totals
     cart.totalCartPrice = totalCartPrice;
+    cart.totalPriceAfterDiscount = totalCartPrice;
     await cart.save();
 
     // find All cart items
