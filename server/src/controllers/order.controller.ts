@@ -71,14 +71,16 @@ export const createOnlineOrder = asyncHandler(
     );
 
     // create moyasar invoice
-    const payment = await createInvoice(
+    const invoice = await createInvoice(
       order.id,
       `order invoice - order id is ${order.id}`
     );
 
+    console.log("invoice", invoice);
+
     res
       .status(201)
-      .json({ status: "success", data: { order, orderItems, payment } });
+      .json({ status: "success", data: { order, orderItems, invoice } });
   }
 );
 
@@ -173,16 +175,19 @@ export const createInvoice = async (orderId: string, description: string) => {
     data,
   };
 
+  let invoice = {};
   await axios
     .request(config)
     .then((response) => {
       console.log(response.data);
-      return response.data;
+      invoice = response.data;
     })
     .catch((err) => {
       console.error(err.response.data);
       throw new ApiError(400, err.message);
     });
+
+  return invoice;
 };
 
 // make invoice payed
