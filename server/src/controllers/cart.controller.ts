@@ -24,6 +24,8 @@ export const addProductToCart = asyncHandler(
       where: { id: productId },
     });
 
+    console.log("product", product);
+
     if (!product) {
       throw new ApiError(400, `Product Not Found`);
     }
