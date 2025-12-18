@@ -1,6 +1,7 @@
 import { Express } from "express";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import { DEPLOYMENT_SERVER } from "./config/env.config";
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -14,6 +15,10 @@ const options: swaggerJsdoc.Options = {
       {
         url: "http://localhost:5000",
         description: "Development server",
+      },
+      {
+        url: DEPLOYMENT_SERVER,
+        description: "Deployment Server",
       },
     ],
     components: {
@@ -31,7 +36,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ["./src/routes/*.ts", "./src/controllers/*.ts"], // adjust paths
+  apis: ["./src/routes/*.ts", "./src/controllers/*.ts"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);

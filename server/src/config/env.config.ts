@@ -31,3 +31,6 @@ export const MOYASAR_SECRET_KEY = process.env.MOYASAR_SECRET_KEY || "";
 export const MOYASAR_URL = process.env.MOYASAR_URL || "";
 export const MOYASAR_SUCCESS_URL = process.env.MOYASAR_SUCCESS_URL || "";
 export const MOYASAR_CALLBACK_URL = process.env.MOYASAR_CALLBACK_URL || "";
+
+// DEPLOYMENT SERVER
+export const DEPLOYMENT_SERVER = process.env.DEPLOYMENT_SERVER || "";
