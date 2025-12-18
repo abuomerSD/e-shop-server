@@ -39,7 +39,8 @@ export const { findOne } = factory;
  */
 export const createCashOrder = asyncHandler(
   async (req: Request, res: Response) => {
-    const { userId, shippingAddress, cartId } = req.body;
+    const { shippingAddress, cartId } = req.body;
+    const userId = req.user.id;
 
     const paymentMethodType = "cash";
 
@@ -57,7 +58,8 @@ export const createCashOrder = asyncHandler(
 // create online order
 export const createOnlineOrder = asyncHandler(
   async (req: Request, res: Response) => {
-    const { userId, shippingAddress, cartId } = req.body;
+    const { shippingAddress, cartId } = req.body;
+    const userId = req.user.id;
 
     const paymentMethodType = "card";
 
@@ -69,7 +71,7 @@ export const createOnlineOrder = asyncHandler(
     );
 
     // create moyasar invoice
-    const payment = createInvoice(
+    const payment = await createInvoice(
       order.id,
       `order invoice - order id is ${order.id}`
     );
