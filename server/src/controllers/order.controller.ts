@@ -86,9 +86,7 @@ const createOrder = async (
 
   // calculate shipping price
 
-  if (cart) {
-    console.log("cartItems", cart.cartItems);
-  }
+  // console.log("cart", cart);
 
   // create order
 
@@ -134,6 +132,9 @@ export const createInvoice = asyncHandler(
     if (order) {
       amount = order.totalOrderPrice ? order.totalOrderPrice : 0;
     }
+
+    // console.log("order", order);
+    // console.log("amount", amount);
 
     // sending create invoice request to moyasar api
     let data = {
