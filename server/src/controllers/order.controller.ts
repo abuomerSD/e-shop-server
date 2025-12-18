@@ -177,7 +177,7 @@ export const createInvoice = asyncHandler(
 export const makePayment = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     console.log("=".repeat(20));
-    // console.log("req body", req.body);
+    console.log("req body", req.body);
     next();
   }
 );
