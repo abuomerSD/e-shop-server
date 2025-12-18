@@ -9,17 +9,17 @@ export const PORT = process.env.PORT || 3000;
 export const NODE_ENV = process.env.NODE_ENV;
 
 // database
-export const DB_NAME = process.env.DB_NAME || "";
-export const DB_USER = process.env.DB_USER || "";
-export const DB_PASSWORD = process.env.DB_PASSWORD || "";
-export const DB_HOST = process.env.DB_HOST || "";
-export const DB_DIALECT = process.env.DB_DIALECT || "";
+export const DB_NAME = process.env.DB_NAME!;
+export const DB_USER = process.env.DB_USER!;
+export const DB_PASSWORD = process.env.DB_PASSWORD!;
+export const DB_HOST = process.env.DB_HOST!;
+export const DB_DIALECT = process.env.DB_DIALECT!;
 
 // testing
-export const API_TEST_URL = process.env.API_TEST_URL || "";
+export const API_TEST_URL = process.env.API_TEST_URL!;
 
 // jwt
-export const JWT_SECRET = process.env.JWT_SECRET || "";
+export const JWT_SECRET = process.env.JWT_SECRET!;
 
 // default admin user
 export const DEFAULT_USER_NAME = process.env.DEFAULT_USER_NAME;
@@ -27,10 +27,10 @@ export const DEFAULT_USER_EMAIL = process.env.DEFAULT_USER_EMAIL;
 export const DEFAULT_USER_PASSWORD = process.env.DEFAULT_USER_PASSWORD;
 
 // MOYASAR
-export const MOYASAR_SECRET_KEY = process.env.MOYASAR_SECRET_KEY || "";
-export const MOYASAR_URL = process.env.MOYASAR_URL || "";
-export const MOYASAR_SUCCESS_URL = process.env.MOYASAR_SUCCESS_URL || "";
-export const MOYASAR_CALLBACK_URL = process.env.MOYASAR_CALLBACK_URL || "";
+export const MOYASAR_SECRET_KEY = process.env.MOYASAR_SECRET_KEY!;
+export const MOYASAR_URL = process.env.MOYASAR_URL!;
+export const MOYASAR_SUCCESS_URL = process.env.MOYASAR_SUCCESS_URL!;
+export const MOYASAR_CALLBACK_URL = process.env.MOYASAR_CALLBACK_URL!;
 
 // DEPLOYMENT SERVER
-export const DEPLOYMENT_SERVER = process.env.DEPLOYMENT_SERVER || "";
+export const DEPLOYMENT_SERVER = process.env.DEPLOYMENT_SERVER!;
