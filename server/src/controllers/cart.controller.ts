@@ -24,6 +24,10 @@ export const addProductToCart = asyncHandler(
       where: { id: productId },
     });
 
+    if (!product) {
+      throw new ApiError(400, `Product Not Found`);
+    }
+
     // check if the cart already created
     let cart = await Cart.findOne({ where: { userId } });
     let cartId = null;

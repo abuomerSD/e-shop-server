@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { PORT } from "./config/env.config";
 import { testDatabaseConnection } from "./config/sequelize.config";
 import morgan from "morgan";
@@ -13,6 +13,12 @@ const app = express();
 // middlewares
 app.use(morgan("dev"));
 app.use(express.json());
+
+// manual logger
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
 // test database connection
 testDatabaseConnection()
