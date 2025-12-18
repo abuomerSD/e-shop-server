@@ -14,12 +14,6 @@ const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 
-// manual logger
-app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-
 // test database connection
 testDatabaseConnection()
   .then(() => {
