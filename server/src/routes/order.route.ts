@@ -15,13 +15,14 @@ import {
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
+router.put("/makePayment", makePayment);
+
 router.use(protect, allowedTo("user"));
 
 router.route("/").get(findAll);
 router.post("/createCashOrder", createCashOrder);
 router.post("/createOnlineOrder", createOnlineOrder);
 router.post("/createInvoice", createInvoice);
-router.put("/makePayment", makePayment);
 router.route("/:id").get(protect, allowedTo("admin"), findOne);
 
 export default router;
