@@ -25,3 +25,9 @@ export const JWT_SECRET = process.env.JWT_SECRET || "";
 export const DEFAULT_USER_NAME = process.env.DEFAULT_USER_NAME;
 export const DEFAULT_USER_EMAIL = process.env.DEFAULT_USER_EMAIL;
 export const DEFAULT_USER_PASSWORD = process.env.DEFAULT_USER_PASSWORD;
+
+// MOYASAR
+export const MOYASAR_SECRET_KEY = process.env.MOYASAR_SECRET_KEY || "";
+export const MOYASAR_URL = process.env.MOYASAR_URL || "";
+export const MOYASAR_SUCCESS_URL = process.env.MOYASAR_SUCCESS_URL || "";
+export const MOYASAR_CALLBACK_URL = process.env.MOYASAR_CALLBACK_URL || "";

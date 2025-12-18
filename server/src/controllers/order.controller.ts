@@ -1,11 +1,20 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
+import axios from "axios";
+
 import Order from "../models/order.model";
 import ControllerFactory from "./controllerFactory";
 import Cart from "../models/cart.model";
 import CartItem from "../models/cartItems.model";
 import OrderItem, { OrderItemAttributes } from "../models/orderItems.model";
 import { TPaymentMethodTypes } from "../types/paymentMothodTypes";
+import {
+  MOYASAR_CALLBACK_URL,
+  MOYASAR_SECRET_KEY,
+  MOYASAR_SUCCESS_URL,
+  MOYASAR_URL,
+} from "../config/env.config";
+import ApiError from "../utils/apiError";
 
 const factory = new ControllerFactory(Order);
 
@@ -113,5 +122,61 @@ const createOrder = async (
   return { order, orderItems };
 };
 
-// make payment
-// make delivered
+// create invoice
+
+export const createInvoice = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { orderId, description } = req.body;
+
+    // get the order amount
+    const order = await Order.findOne({ where: { id: orderId } });
+    let amount = 0;
+    if (order) {
+      amount = order.totalOrderPrice ? order.totalOrderPrice : 0;
+    }
+
+    // sending create invoice request to moyasar api
+    let data = {
+      amount: amount * 100,
+      description: description,
+      success_url: MOYASAR_SUCCESS_URL,
+      callback_url: MOYASAR_CALLBACK_URL,
+    };
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: MOYASAR_URL,
+      auth: {
+        username: MOYASAR_SECRET_KEY,
+        password: "",
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      data,
+    };
+
+    await axios
+      .request(config)
+      .then((response) => {
+        console.log(response);
+        res.status(201).json({ status: "success" });
+      })
+      .catch((err) => {
+        console.error(err);
+        throw new ApiError(400, err.message);
+      });
+  }
+);
+
+// make invoice payed
+
+export const makePayment = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("=".repeat(20));
+    // console.log("req body", req.body);
+    next();
+  }
+);
