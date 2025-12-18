@@ -162,8 +162,8 @@ export const createInvoice = asyncHandler(
     await axios
       .request(config)
       .then((response) => {
-        console.log(response);
-        res.status(201).json({ status: "success" });
+        console.log(response.data);
+        res.status(201).json({ status: "success", data: response.data });
       })
       .catch((err) => {
         console.error(err.response.data);
