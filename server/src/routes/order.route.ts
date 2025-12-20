@@ -5,6 +5,7 @@ import {
   createCashOrder,
   createOnlineOrder,
   makePayment,
+  makeDelivered,
 } from "../controllers/order.controller";
 import {
   createOrderValidator,
@@ -23,6 +24,7 @@ router.post(
   createOnlineOrder
 );
 router.post("/makePayment", makePayment);
+router.post("/makeDelivered", makeDelivered);
 router.route("/:id").get(protect, allowedTo("admin"), findOne);
 
 export default router;

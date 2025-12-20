@@ -34,3 +34,7 @@ export const MOYASAR_CALLBACK_URL = process.env.MOYASAR_CALLBACK_URL!;
 
 // DEPLOYMENT SERVER
 export const DEPLOYMENT_SERVER = process.env.DEPLOYMENT_SERVER!;
+
+// Node Mailer
+export const NODEMAILER_EMAIL = process.env.NODEMAILER_EMAIL!;
+export const NODEMAILER_PASSWORD = process.env.NODEMAILER_PASSWORD;

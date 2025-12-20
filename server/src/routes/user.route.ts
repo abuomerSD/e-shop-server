@@ -5,6 +5,7 @@ import {
   findAll,
   updateOne,
   deleteOne,
+  requestPasswordChange,
 } from "../controllers/user.controller.js";
 import {
   createUserValidator,
@@ -14,7 +15,7 @@ import {
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router.use(protect, allowedTo("admin", "manager"));
+// router.use(protect, allowedTo("admin", "manager"));
 
 /**
  * @swagger
@@ -92,7 +93,17 @@ router.use(protect, allowedTo("admin", "manager"));
  *       201:
  *         description: returns the Created User, the discount is percentage number
  */
-router.route("/").get(findAll).post(createUserValidator, create);
+router
+  .route("/")
+  .get(protect, allowedTo("admin", "manager"), findAll)
+  .post(protect, allowedTo("admin", "manager"), createUserValidator, create);
+
+router.post(
+  "/requestPasswordChange",
+  protect,
+  allowedTo("user"),
+  requestPasswordChange
+);
 
 /**
  * @swagger
@@ -175,8 +186,13 @@ router.route("/").get(findAll).post(createUserValidator, create);
  */
 router
   .route("/:id")
-  .get(findOne)
-  .put(updateUserValidator, updateOne)
-  .delete(deleteUserValidator, deleteOne);
+  .get(protect, allowedTo("admin", "manager"), findOne)
+  .put(updateUserValidator, protect, allowedTo("admin", "manager"), updateOne)
+  .delete(
+    deleteUserValidator,
+    protect,
+    allowedTo("admin", "manager"),
+    deleteOne
+  );
 
 export default router;

@@ -194,14 +194,27 @@ export const createInvoice = async (orderId: string, description: string) => {
 
 export const makePayment = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log("=".repeat(20));
-    console.log("req body", req.body);
     const { status, metadata } = req.body;
     const order = await Order.findOne({ where: { id: metadata.orderId } });
     if (status === "paid" && order) {
       order.isPaid = true;
+      order.paidAt = new Date(Date.now());
       await order.save();
     }
-    next();
+    res.status(200).json({ status: "success" });
+  }
+);
+
+export const makeDelivered = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { orderId } = req.body;
+    const order = await Order.findOne({ where: { id: orderId } });
+    if (order) {
+      order.isDelivered = true;
+      order.deliveredAt = new Date(Date.now());
+      await order.save();
+    }
+
+    res.status(200).json({ status: "success" });
   }
 );
