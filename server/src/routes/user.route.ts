@@ -100,7 +100,7 @@ router
   .get(protect, allowedTo("admin", "manager"), findAll)
   .post(protect, allowedTo("admin", "manager"), createUserValidator, create);
 
-router.get(
+router.post(
   "/requestPasswordResetCode",
   protect,
   allowedTo("user"),

@@ -49,21 +49,17 @@ export const { deleteOne } = factory;
 
 export const requestPasswordChange = asyncHandler(
   async (req: Request, res: Response) => {
-    // get the user by id
-    const userId = req.user.id;
-    const user = await User.findOne({ where: { id: userId } });
+    const { email } = req.body;
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      throw new ApiError(401, "user email is not correct");
+    }
 
     // create password reset code 6-digits and store it in the user passwordResetCode record in database
     const otp = generateRandomSixDigitNumber();
 
     // save the otp to the database
-    if (!user) {
-      throw new ApiError(
-        401,
-        "the logged user can not change password, please sign in again"
-      );
-    }
-
     user.passwordResetCode = otp.toString();
     user.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
     await user.save();
@@ -84,16 +80,11 @@ export const requestPasswordChange = asyncHandler(
 
 export const verifyPasswordResetCode = asyncHandler(
   async (req: Request, res: Response) => {
-    // get user by id
-    const userId = req.user.id;
-    const { resetCode } = req.body;
-    const user = await User.findOne({ where: { id: userId } });
+    const { resetCode, email } = req.body;
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      throw new ApiError(
-        401,
-        "the logged user can not change password, please sign in again"
-      );
+      throw new ApiError(401, "user email is not correct");
     }
 
     // check the expires time
@@ -118,9 +109,12 @@ export const verifyPasswordResetCode = asyncHandler(
 
 export const changePassword = asyncHandler(
   async (req: Request, res: Response) => {
-    const { newPassword, newPasswordConfirm } = req.body;
-    const userId = req.user.id;
-    const user = await User.findOne({ where: { id: userId } });
+    const { newPassword, newPasswordConfirm, email } = req.body;
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      throw new ApiError(401, "user email is not correct");
+    }
 
     if (!user) {
       throw new ApiError(
