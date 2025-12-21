@@ -65,25 +65,85 @@ export const requestPasswordChange = asyncHandler(
     }
 
     user.passwordResetCode = otp.toString();
+    user.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
     await user.save();
+
     // send the reset code to the users email
     if (user) {
-      sendEmail(user.email, "6-Digits OTP Code", "", resetPasswordHTML(otp));
+      sendEmail(user.email, "6-Digits OTP Code", "", getResetPasswordHTML(otp));
     }
+
+    res.status(200).json({
+      status: "success",
+      data: { message: "OTP Code Sent To user email" },
+    });
 
     //
   }
 );
 
 export const verifyPasswordResetCode = asyncHandler(
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     // get user by id
+    const userId = req.user.id;
+    const { resetCode } = req.body;
+    const user = await User.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new ApiError(
+        401,
+        "the logged user can not change password, please sign in again"
+      );
+    }
+
+    // check the expires time
+    if (!(new Date(Date.now()) < user.passwordResetExpires)) {
+      throw new ApiError(400, "This Password Reset Code has Expired");
+    }
+
     // compare the reset code
-    // reset password
+    if (user.passwordResetCode === resetCode) {
+      user.passwordResetVerified = true;
+      await user.save();
+    } else {
+      throw new ApiError(400, "this Password Reset Code is not correct");
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: { message: "user password reset code verified" },
+    });
   }
 );
 
-const resetPasswordHTML = (otp: number) => {
+export const changePassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { newPassword, newPasswordConfirm } = req.body;
+    const userId = req.user.id;
+    const user = await User.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new ApiError(
+        401,
+        "the logged user can not change password, please sign in again"
+      );
+    }
+
+    if (newPassword === newPasswordConfirm && user.passwordResetVerified) {
+      user.password = newPassword;
+      user.passwordResetCode = "";
+      user.passwordResetVerified = false;
+      await user.save();
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: { message: "user password changed" },
+    });
+  }
+);
+
+const getResetPasswordHTML = (otp: string) => {
   return `
   
     <!DOCTYPE html>
@@ -144,7 +204,7 @@ const resetPasswordHTML = (otp: number) => {
     <div class="otp">${otp}</div>
 
     <div class="note">
-      Copy this code and paste it on the website
+      Copy this code and paste it on the website, The Reset Code Will Expire after 10 minutes
     </div>
   </div>
 

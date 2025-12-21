@@ -6,6 +6,8 @@ import {
   updateOne,
   deleteOne,
   requestPasswordChange,
+  verifyPasswordResetCode,
+  changePassword,
 } from "../controllers/user.controller.js";
 import {
   createUserValidator,
@@ -98,12 +100,21 @@ router
   .get(protect, allowedTo("admin", "manager"), findAll)
   .post(protect, allowedTo("admin", "manager"), createUserValidator, create);
 
-router.post(
-  "/requestPasswordChange",
+router.get(
+  "/requestPasswordResetCode",
   protect,
   allowedTo("user"),
   requestPasswordChange
 );
+
+router.post(
+  "/verifyPasswordResetCode",
+  protect,
+  allowedTo("user"),
+  verifyPasswordResetCode
+);
+
+router.post("/changePassword", protect, allowedTo("user"), changePassword);
 
 /**
  * @swagger
