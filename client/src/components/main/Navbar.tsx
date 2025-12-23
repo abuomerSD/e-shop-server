@@ -7,14 +7,14 @@ import {
 const Navbar = () => {
   return (
     <div className="bg-gray-900 h-14 flex items-center">
-      <div className="flex justify-between items-center  w-[97%] mx-auto">
-        <img className="w-25" src={logo} alt="logo" />
+      <div className="flex justify-between gap-2 items-center  w-[97%] mx-auto">
+        <img className="w-1/6 md:w-25" src={logo} alt="logo" />
         <div className="w-175 bg-gray-200 h-9 rounded-md flex flex-row">
           <input
-            className="h-full w-11/12 p-2 focus:border-0 focus:outline-0"
+            className="h-full w-10/12 md:w-11/12 p-2 focus:border-0 focus:outline-0"
             type="text"
           />
-          <button className="bg-yellow-500 w-1/12 cursor-pointer hover:bg-yellow-600 rounded-r-md">
+          <button className="bg-yellow-500 w-2/12 md:w-1/12 cursor-pointer hover:bg-yellow-600 rounded-r-md">
             <MagnifyingGlassIcon className="w-7 mx-auto text-gray-900" />
           </button>
         </div>
