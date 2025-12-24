@@ -11,7 +11,7 @@ import {
   UsersIcon,
 } from "@heroicons/react/16/solid";
 
-const Sidebar = () => {
+const Sidebar = ({ closeSidebar }: { closeSidebar?: () => void }) => {
   const navClass = ({ isActive }: { isActive: boolean }) => {
     return `text-gray-100 flex items-center gap-1 p-3 rounded-full hover:bg-yellow-600 w-4/5  transition-colors duration-200 ${
       isActive ? "bg-yellow-600" : ""
@@ -22,31 +22,60 @@ const Sidebar = () => {
     <aside className="flex flex-col gap-10 bg-gray-900 min-h-screen p-5">
       <img className="w-2/5 mt-3 ms-5" src={logo} alt="logo" />
       <div className="flex flex-col gap-2">
-        <NavLink className={navClass} to="/dashboard" end>
+        <NavLink
+          className={navClass}
+          to="/dashboard"
+          onClick={closeSidebar}
+          end
+        >
           <PresentationChartLineIcon className="w-1/10" />
           Dashboard
         </NavLink>
-        <NavLink className={navClass} to="/dashboard/categories">
+        <NavLink
+          className={navClass}
+          to="/dashboard/categories"
+          onClick={closeSidebar}
+        >
           <FolderOpenIcon className="w-1/10" />
           Categories
         </NavLink>
-        <NavLink className={navClass} to="/dashboard/subcategories">
+        <NavLink
+          className={navClass}
+          to="/dashboard/subcategories"
+          onClick={closeSidebar}
+        >
           <DocumentDuplicateIcon className="w-1/10" />
           SubCategories
         </NavLink>
-        <NavLink className={navClass} to="/dashboard/brands">
+        <NavLink
+          className={navClass}
+          to="/dashboard/brands"
+          onClick={closeSidebar}
+        >
           <RocketLaunchIcon className="w-1/10" />
           Brands
         </NavLink>
-        <NavLink className={navClass} to="/dashboard/products">
+        <NavLink
+          className={navClass}
+          to="/dashboard/products"
+          onClick={closeSidebar}
+        >
           <ShoppingBagIcon className="w-1/10" />
           Products
         </NavLink>
-        <NavLink className={navClass} to="/dashboard/orders">
+        <NavLink
+          className={navClass}
+          to="/dashboard/orders"
+          onClick={closeSidebar}
+        >
           <QueueListIcon className="w-1/10" />
           Orders
         </NavLink>
-        <NavLink className={navClass} to="/dashboard/users">
+        <NavLink
+          className={navClass}
+          to="/dashboard/users"
+          onClick={closeSidebar}
+        >
           <UsersIcon className="w-1/10" />
           Users
         </NavLink>
