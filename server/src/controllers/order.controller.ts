@@ -7,7 +7,7 @@ import ControllerFactory from "./controllerFactory";
 import Cart from "../models/cart.model";
 import CartItem from "../models/cartItems.model";
 import OrderItem, { OrderItemAttributes } from "../models/orderItems.model";
-import { TPaymentMethodTypes } from "../types/paymentMothodTypes";
+import { TPaymentMethodTypes } from "../types/paymentMethodTypes";
 import {
   MOYASAR_CALLBACK_URL,
   MOYASAR_SECRET_KEY,
