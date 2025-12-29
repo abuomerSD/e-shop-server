@@ -8,9 +8,11 @@ import {
   updateItemQuantity,
 } from "../controllers/cart.controller";
 import {
-  createCartValidator,
-  deleteCartValidator,
-  updateCartValidator,
+  addProductToCartValidator,
+  applyCouponToCartValidator,
+  clearLoggedUserCartValidator,
+  deleteProductFromCartValidator,
+  updateProductQuantityValidator,
 } from "../utils/validators/cart.validator";
 import { allowedTo, protect } from "../middlewares/auth.js";
 const router = express.Router();
@@ -20,11 +22,16 @@ router.use(protect, allowedTo("user"));
 router
   .route("/")
   .get(getLoggedUserCart)
-  .post(addProductToCart)
-  .delete(clearLoggedUserCart);
+  .post(addProductToCartValidator, addProductToCart)
+  .delete(clearLoggedUserCartValidator, clearLoggedUserCart);
 
-router.route("/apply-coupon").post(applyCouponToCart);
+router
+  .route("/apply-coupon")
+  .post(applyCouponToCartValidator, applyCouponToCart);
 
-router.route("/:productId").put(updateItemQuantity).delete(deleteItemFromCart);
+router
+  .route("/:cartId")
+  .put(updateProductQuantityValidator, updateItemQuantity)
+  .delete(deleteProductFromCartValidator, deleteItemFromCart);
 
 export default router;

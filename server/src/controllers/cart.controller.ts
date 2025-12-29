@@ -171,8 +171,8 @@ export const clearLoggedUserCart = asyncHandler(
  */
 export const updateItemQuantity = asyncHandler(
   async (req: Request, res: Response) => {
-    const { productId } = req.params;
-    const { cartId, quantity } = req.body;
+    const { cartId } = req.params;
+    const { productId, quantity } = req.body;
 
     // update qty
     const cartItem = await CartItem.findOne({ where: { cartId, productId } });
@@ -203,8 +203,8 @@ export const updateItemQuantity = asyncHandler(
  */
 export const deleteItemFromCart = asyncHandler(
   async (req: Request, res: Response) => {
-    const { productId } = req.params;
-    const { cartId } = req.body;
+    const { productId } = req.body;
+    const { cartId } = req.params;
 
     // delete product from cart
     const cartItem = await CartItem.findOne({ where: { productId, cartId } });
