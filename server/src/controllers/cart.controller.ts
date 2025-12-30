@@ -92,16 +92,18 @@ export const applyCouponToCart = asyncHandler(
     const cart = await Cart.findOne({ where: { id: cartId } });
 
     // check if discount already applied
-    if (cart?.totalPriceAfterDiscount && cart.totalPriceAfterDiscount > 0) {
+    if (
+      cart?.totalCartPrice &&
+      cart?.totalPriceAfterDiscount &&
+      cart.totalPriceAfterDiscount < cart.totalCartPrice
+    ) {
       throw new ApiError(400, "Discount Already applied to this cart");
     }
 
     if (coupon && cart && cart.totalCartPrice && coupon.discount) {
-      if (!cart.totalPriceAfterDiscount) {
-        let discount = cart.totalCartPrice * (coupon.discount / 100); // discount is percentage
-        cart.totalPriceAfterDiscount = cart.totalCartPrice - discount;
-        await cart.save();
-      }
+      let discount = cart.totalCartPrice * (coupon.discount / 100); // discount is percentage
+      cart.totalPriceAfterDiscount = cart.totalCartPrice - discount;
+      await cart.save();
     }
 
     res.status(200).json({
