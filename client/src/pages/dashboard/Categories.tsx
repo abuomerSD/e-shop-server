@@ -1,6 +1,20 @@
 import { PlusIcon } from "@heroicons/react/16/solid";
+import { useEffect, useState } from "react";
+import { http } from "../../services/http";
+import { API_URL } from "../../config/env";
 
 const Categories = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const res = await http.get(`${API_URL}/categories`);
+      setCategories(res.data.data);
+    };
+
+    getCategories();
+  }, [categories]);
+
   return (
     <div className="min-h-screen flex flex-col gap-5">
       <h1 className="font-bold text-2xl">Categories</h1>
@@ -39,8 +53,8 @@ const Categories = () => {
                 />
               </td>
               <td className="px-4 py-2 flex gap-2 justify-center">
-                <button className="text-blue-600">Edit</button>
-                <button className="text-red-600">Delete</button>
+                <button className="text-blue-600 cursor-pointer">Edit</button>
+                <button className="text-red-600 cursor-pointer">Delete</button>
               </td>
             </tr>
           </tbody>

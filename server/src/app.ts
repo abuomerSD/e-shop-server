@@ -1,5 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
-import { PORT } from "./config/env.config";
+import cors from "cors";
+
+import { CORS_ORIGIN_URL, PORT } from "./config/env.config";
 import { testDatabaseConnection } from "./config/sequelize.config";
 import morgan from "morgan";
 import attachRoutes from "./utils/attachRoutes";
@@ -13,6 +15,12 @@ const app = express();
 // middlewares
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(
+  cors({
+    origin: CORS_ORIGIN_URL,
+    credentials: true,
+  })
+);
 
 // test database connection
 testDatabaseConnection()

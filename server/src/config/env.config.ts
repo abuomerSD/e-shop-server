@@ -37,4 +37,7 @@ export const DEPLOYMENT_SERVER = process.env.DEPLOYMENT_SERVER!;
 
 // Node Mailer
 export const NODEMAILER_EMAIL = process.env.NODEMAILER_EMAIL!;
-export const NODEMAILER_PASSWORD = process.env.NODEMAILER_PASSWORD;
+export const NODEMAILER_PASSWORD = process.env.NODEMAILER_PASSWORD!;
+
+// Cors
+export const CORS_ORIGIN_URL = process.env.CORS_ORIGIN_URL!;
