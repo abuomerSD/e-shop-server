@@ -2,18 +2,40 @@ import { PlusIcon } from "@heroicons/react/16/solid";
 import { useEffect, useState } from "react";
 import { http } from "../../services/http";
 import { API_URL } from "../../config/env";
+import type { ICategory } from "../../types/types";
+import ReactPaginate from "react-paginate";
+import { PAGE_LIMIT } from "../../utils/constants";
 
 const Categories = () => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [page, setPage] = useState(0); // react-paginate index starts at 0
+  const [totalPages, setTotalPages] = useState(0);
+  const limit = PAGE_LIMIT;
 
   useEffect(() => {
-    const getCategories = async () => {
-      const res = await http.get(`${API_URL}/categories`);
-      setCategories(res.data.data);
+    let isMounted = true; // للتأكد أن الكومبوننت لم يُفكك أثناء الـ request
+
+    const fetchCategories = async () => {
+      try {
+        const res = await http.get(
+          `${API_URL}/categories?page=${page + 1}&limit=${limit}`
+        );
+
+        if (isMounted) {
+          setCategories(res.data); // data من API
+          setTotalPages(res.results);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     };
 
-    getCategories();
-  }, [categories]);
+    fetchCategories();
+
+    return () => {
+      isMounted = false; // عند unmount الكومبوننت
+    };
+  }, [page]);
 
   return (
     <div className="min-h-screen flex flex-col gap-5">
@@ -29,6 +51,7 @@ const Categories = () => {
           New
         </button>
       </div>
+
       <div className="overflow-x-auto rounded-lg">
         <table className="min-w-full text-sm">
           <thead className="bg-gray-100 text-gray-700">
@@ -42,23 +65,42 @@ const Categories = () => {
           </thead>
 
           <tbody className="divide-y divide-gray-200">
-            <tr className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
-              <td className="px-4 py-2">1</td>
-              <td className="px-4 py-2">Category 1</td>
-              <td className="px-4 py-2">1-12-2025</td>
-              <td className="px-4 py-2">
-                <img
-                  className="w-16 h-16 rounded object-cover"
-                  src="https://cdn.thewirecutter.com/wp-content/media/2024/07/laptopstopicpage-2048px-3685-3x2-1.jpg?auto=webp&quality=75&crop=4:3,smart&width=1024"
-                />
-              </td>
-              <td className="px-4 py-2 flex gap-2 justify-center">
-                <button className="text-blue-600 cursor-pointer">Edit</button>
-                <button className="text-red-600 cursor-pointer">Delete</button>
-              </td>
-            </tr>
+            {categories.length > 0 &&
+              categories.map((category, index) => (
+                <tr
+                  className="odd:bg-white even:bg-gray-50 hover:bg-gray-100"
+                  key={category.id}
+                >
+                  <td className="px-4 py-2">{page * limit + index + 1}</td>
+                  <td className="px-4 py-2">{category.name}</td>
+                  <td className="px-4 py-2">
+                    {new Date(category.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-2">{category.image}</td>
+                  <td className="px-4 py-2 flex gap-2 justify-center">
+                    <button className="text-blue-600 cursor-pointer">
+                      Edit
+                    </button>
+                    <button className="text-red-600 cursor-pointer">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
+
+        <ReactPaginate
+          previousLabel={"Prev"}
+          nextLabel={"Next"}
+          pageCount={totalPages}
+          onPageChange={(selected) => setPage(selected.selected)}
+          containerClassName="flex justify-center mt-4 gap-2"
+          pageClassName="px-3 py-1 border rounded hover:bg-gray-100 cursor-pointer"
+          previousClassName="px-3 py-1 border rounded hover:bg-gray-100 cursor-pointer"
+          nextClassName="px-3 py-1 border rounded hover:bg-gray-100 cursor-pointer"
+          activeClassName="bg-blue-600 text-white"
+        />
       </div>
     </div>
   );
