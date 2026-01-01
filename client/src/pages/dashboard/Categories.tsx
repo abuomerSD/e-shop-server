@@ -6,6 +6,7 @@ import ReactPaginate from "react-paginate";
 import { PAGE_LIMIT } from "../../utils/constants";
 import CategoryFormModal from "../../components/forms/CategoryFormModal";
 import DeleteModal from "../../components/forms/DeleteModal";
+import { API_FILE_URL } from "../../config/env";
 
 const Categories = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -35,6 +36,7 @@ const Categories = () => {
         page: page + 1,
         limit,
         search: searchTerm || undefined,
+        searchCol: "name",
       });
 
       setCategories(response.data);
@@ -57,14 +59,18 @@ const Categories = () => {
     fetchCategories();
   };
 
-  const handleCreate = async (data: any) => {
-    await categoryService.create(data);
+  const handleCreate = async (data: any, imageFile: File | null) => {
+    await categoryService.create(data, imageFile || undefined);
     await fetchCategories();
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: any, imageFile: File | null) => {
     if (selectedCategory) {
-      await categoryService.update(selectedCategory.id, data);
+      await categoryService.update(
+        selectedCategory.id,
+        data,
+        imageFile || undefined
+      );
       await fetchCategories();
     }
   };
@@ -172,7 +178,7 @@ const Categories = () => {
                         <td className="px-4 py-3">
                           {category.image ? (
                             <img
-                              src={category.image}
+                              src={`${API_FILE_URL}/${category.image}`}
                               alt={category.name}
                               className="w-10 h-10 object-cover rounded"
                             />

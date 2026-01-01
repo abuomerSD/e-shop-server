@@ -78,6 +78,17 @@ export const http = {
     });
     return res.data;
   },
+  uploadPut: async <T = any>(
+    url: string,
+    formData: FormData
+  ): Promise<IApiResponse<T>> => {
+    const res = await axiosInstance.put(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  },
 };
 
 // Auth helper functions

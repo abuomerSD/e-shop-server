@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import sharp from "sharp";
 import { uuid } from "uuidv4";
+import path from "path";
+import fs from "fs";
 
 // middleware to resize uploaded images , to save server storage
 export const resizeImage =
@@ -56,9 +58,16 @@ const createNewName = (name: string) => {
 };
 
 const sharpTheImage = async (buffer: any, filename: string) => {
+  const uploadsDir = path.join(__dirname, "..", "..", "uploads");
+
+  // ensure uploads directory exists
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+
   await sharp(buffer)
     .resize(600, 600)
     .toFormat("jpeg")
     .jpeg({ quality: 95 })
-    .toFile(`uploads/${filename}`);
+    .toFile(path.join(uploadsDir, filename));
 };

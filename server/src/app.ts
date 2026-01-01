@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
+import path from "path";
 
 import { CORS_ORIGIN_URL, PORT } from "./config/env.config";
 import { testDatabaseConnection } from "./config/sequelize.config";
@@ -29,6 +30,11 @@ testDatabaseConnection()
     insertDefaultUser();
   })
   .catch((err) => console.log(err));
+
+// serve static files from uploads directory
+const uploadsPath = path.join(__dirname, "..", "uploads");
+console.log("Serving uploads from:", uploadsPath);
+app.use("/uploads", express.static(uploadsPath));
 
 // routes
 attachRoutes(app);

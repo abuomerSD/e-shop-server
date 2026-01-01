@@ -5,7 +5,7 @@ import type { ICategoryCreate, ICategory } from "../../types/types";
 interface CategoryFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: ICategoryCreate) => Promise<void>;
+  onSubmit: (data: ICategoryCreate, imageFile: File | null) => Promise<void>;
   category?: ICategory;
   title: string;
 }
@@ -21,6 +21,10 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
     name: category?.name || "",
     image: category?.image || "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(
+    category?.image || ""
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -32,15 +36,47 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
     }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        setError("Please select a valid image file");
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image file size must be less than 5MB");
+        return;
+      }
+
+      setImageFile(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      setError(""); // Clear any previous errors
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      await onSubmit(formData);
+      // Use the updated service method that handles image upload
+      await onSubmit(formData, imageFile);
+
       onClose();
       setFormData({ name: "", image: "" });
+      setImageFile(null);
+      setImagePreview("");
     } catch (err: unknown) {
       const errorMessage =
         err && typeof err === "object" && "response" in err
@@ -99,17 +135,30 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
               htmlFor="image"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Image URL
+              Category Image
             </label>
             <input
-              type="url"
+              type="file"
               id="image"
               name="image"
-              value={formData.image}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-              placeholder="Enter image URL"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              Accepted formats: JPG, PNG, GIF. Max size: 5MB
+            </p>
+
+            {/* Image Preview */}
+            {imagePreview && (
+              <div className="mt-3">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-20 h-20 object-cover rounded-md border border-gray-200"
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex gap-3 justify-end pt-4">
