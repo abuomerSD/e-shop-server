@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { authService } from "../services/api";
 import type { IUser } from "../types/types";
+import { authUtils } from "../services/http";
 
 interface AuthContextType {
   user: IUser | null;
@@ -49,7 +50,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     const response = await authService.login({ email, password });
-    setUser(response.data);
+
+    console.log("login response:", response);
+
+    // Store token and user data
+    if (response.data) {
+      authUtils.setToken(response.token);
+      authUtils.setUser(response.data);
+    }
+
+    const user = response.data;
+    setUser(user);
   };
 
   const signup = async (userData: {
@@ -60,6 +71,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     phone?: string;
   }) => {
     const response = await authService.signup(userData);
+
+    console.log("Signup response:", response);
+
+    // Store token and user data
+    if (response.data) {
+      authUtils.setToken(response.token);
+      authUtils.setUser(response.data);
+    }
+
     setUser(response.data);
   };
 

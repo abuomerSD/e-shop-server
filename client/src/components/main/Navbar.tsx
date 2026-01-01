@@ -6,13 +6,12 @@ import {
   ShoppingCartIcon,
   UserIcon,
 } from "@heroicons/react/16/solid";
-import { authService } from "../../services/api";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartCount] = useState(0); // This would come from cart context
-  const user = authService.getCurrentUser();
-  const isAuthenticated = authService.isAuthenticated();
+  const { user, isAuthenticated } = useAuth();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

@@ -188,6 +188,8 @@ export interface IApiResponse<T> {
   results?: number;
   paginationResult?: IPaginationResult;
   data: T;
+  token: string;
+  status: string;
 }
 
 export interface IPaginationResult {

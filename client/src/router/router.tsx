@@ -22,7 +22,7 @@ const routes: RouteObject[] = [
   {
     path: "/dashboard",
     element: (
-      <ProtectedRoute requiredRole="manager">
+      <ProtectedRoute requiredRole="admin">
         <DashboardLayout />
       </ProtectedRoute>
     ),

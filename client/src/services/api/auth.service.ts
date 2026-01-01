@@ -3,31 +3,20 @@ import type {
   ILoginCredentials,
   ISignupData,
   IAuthResponse,
+  IUser,
 } from "../../types/types";
 
 export const authService = {
   login: async (credentials: ILoginCredentials): Promise<IAuthResponse> => {
-    const response = await http.post<IAuthResponse>("/auth/login", credentials);
-
-    // Store token and user data
-    if (response.data.token) {
-      authUtils.setToken(response.data.token);
-      authUtils.setUser(response.data.data);
-    }
-
-    return response.data;
+    const response = await http.post<IUser>("/auth/login", credentials);
+    console.log(response);
+    return response;
   },
 
   signup: async (userData: ISignupData): Promise<IAuthResponse> => {
-    const response = await http.post<IAuthResponse>("/auth/signup", userData);
-
-    // Store token and user data
-    if (response.data.token) {
-      authUtils.setToken(response.data.token);
-      authUtils.setUser(response.data.data);
-    }
-
-    return response.data;
+    const response = await http.post<IUser>("/auth/signup", userData);
+    console.log(response);
+    return response;
   },
 
   logout: () => {

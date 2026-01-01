@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { authService } from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
 import type { ILoginCredentials } from "../types/types";
 
 const Login = () => {
@@ -11,13 +11,15 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login, isAuthenticated, user } = useAuth();
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (authService.isAuthenticated()) {
-      navigate("/dashboard");
+    if (isAuthenticated) {
+      const dashboardPath = user?.role === "user" ? "/" : "/dashboard";
+      navigate(dashboardPath);
     }
-  }, [navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,8 +35,8 @@ const Login = () => {
     setError("");
 
     try {
-      await authService.login(formData);
-      navigate("/dashboard");
+      await login(formData.email, formData.password);
+      // Navigation handled by useEffect above
     } catch (err: any) {
       setError(
         err.response?.data?.message || "Login failed. Please try again."
