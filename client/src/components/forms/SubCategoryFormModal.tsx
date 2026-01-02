@@ -172,14 +172,14 @@ const SubCategoryFormModal: React.FC<SubCategoryFormModalProps> = ({
 
           <div>
             <label
-              htmlFor="category"
+              htmlFor="categoryId"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Category *
             </label>
             <select
-              id="category"
-              name="category"
+              id="categoryId"
+              name="categoryId"
               value={formData.categoryId}
               onChange={handleChange}
               required

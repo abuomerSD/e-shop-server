@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import {
   create,
   findOne,
@@ -94,6 +94,10 @@ router
     allowedTo("admin", "manager"),
     uploadSingleImage,
     createSubCategoryValidator,
+    (req: Request, res: Response, next: NextFunction) => {
+      console.log("file", req.file);
+      next();
+    },
     resizeImage("subCategory"),
     create
   );

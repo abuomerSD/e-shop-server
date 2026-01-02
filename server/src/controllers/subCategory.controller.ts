@@ -1,6 +1,9 @@
 /* eslint-disable import/extensions */
 import ControllerFactory from "./controllerFactory";
 import subCategory from "../models/subCategory.model";
+import category from "../models/category.model";
+import asyncHandler from "express-async-handler";
+import { ApiFeatures } from "../utils/apiFeatures";
 
 const factory = new ControllerFactory(subCategory);
 
@@ -23,7 +26,23 @@ export const { findOne } = factory;
  * @route   GET /api/v1/subCategories
  * @access  Private
  */
-export const { findAll } = factory;
+export const findAll = asyncHandler(async (req, res) => {
+  const apiFeatures = new ApiFeatures(req.query);
+  const whereClause = apiFeatures.search().paginate().sort().whereClause;
+  whereClause.include = [
+    {
+      model: category,
+      as: "category",
+      attributes: ["id", "name"],
+    },
+  ];
+  const subCategories = await subCategory.findAll(whereClause);
+  res.status(200).json({
+    status: "success",
+    results: subCategories.length,
+    data: subCategories,
+  });
+});
 
 /**
  * @desc    Update a subCategory by ID
