@@ -257,7 +257,7 @@ const Products = () => {
                         <td className="px-4 py-3">
                           {product.imageCover ? (
                             <img
-                              src={product.imageCover}
+                              src={`${API_FILE_URL}/${product.imageCover}`}
                               alt={product.title}
                               className="w-12 h-12 object-cover rounded"
                             />

@@ -3,6 +3,8 @@ import MainLayout from "../layouts/MainLayout";
 import { productService, categoryService, brandService } from "../services/api";
 import type { IProduct, ICategory, IBrand } from "../types/types";
 import { ShoppingCartIcon, StarIcon } from "@heroicons/react/16/solid";
+import { useCart } from "../hooks/useCart";
+import { useAuth } from "../contexts/AuthContext";
 
 const Home = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -13,6 +15,12 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
 
   const fetchProducts = async () => {
     try {
@@ -78,6 +86,29 @@ const Home = () => {
     return stars;
   };
 
+  const handleAddToCart = async (productId: string) => {
+    if (!isAuthenticated) {
+      setErrorMessage("Please login to add items to cart");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    setAddingToCart(productId);
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      await addToCart(productId);
+      setSuccessMessage("Item added to cart successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (err: any) {
+      setErrorMessage(err.message || "Failed to add item to cart");
+      setTimeout(() => setErrorMessage(""), 3000);
+    } finally {
+      setAddingToCart(null);
+    }
+  };
+
   return (
     <MainLayout>
       <div className="min-h-screen bg-gray-50">
@@ -94,6 +125,18 @@ const Home = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Success/Error Messages */}
+          {successMessage && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+              {successMessage}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+              {errorMessage}
+            </div>
+          )}
+
           {/* Filters */}
           <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -220,8 +263,26 @@ const Home = () => {
                             </span>
                           )}
                         </div>
-                        <button className="bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded-md transition-colors duration-200">
-                          <ShoppingCartIcon className="w-5 h-5" />
+                        <button
+                          onClick={() => handleAddToCart(product.id)}
+                          disabled={
+                            addingToCart === product.id ||
+                            (product.quantity || 0) <= 0
+                          }
+                          className="bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          title={
+                            !isAuthenticated
+                              ? "Login to add to cart"
+                              : (product.quantity || 0) <= 0
+                              ? "Out of stock"
+                              : "Add to cart"
+                          }
+                        >
+                          {addingToCart === product.id ? (
+                            <div className="w-5 h-5 animate-spin border-2 border-white border-t-transparent rounded-full"></div>
+                          ) : (
+                            <ShoppingCartIcon className="w-5 h-5" />
+                          )}
                         </button>
                       </div>
                       <div className="mt-2">

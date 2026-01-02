@@ -7,11 +7,12 @@ import {
   UserIcon,
 } from "@heroicons/react/16/solid";
 import { useAuth } from "../../contexts/AuthContext";
+import { useCart } from "../../hooks/useCart";
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [cartCount] = useState(0); // This would come from cart context
   const { user, isAuthenticated } = useAuth();
+  const { cartItemsCount } = useCart();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,16 +81,19 @@ const Navbar = () => {
 
           {/* Shopping Cart */}
           <div className="relative">
-            <button className="text-gray-200 hover:text-white p-2 hover:bg-gray-800 rounded-md transition-colors duration-200">
+            <Link
+              to="/cart"
+              className="text-gray-200 hover:text-white p-2 hover:bg-gray-800 rounded-md transition-colors duration-200 block"
+            >
               <div className="relative">
-                {cartCount > 0 && (
+                {cartItemsCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    {cartCount > 99 ? "99+" : cartCount}
+                    {cartItemsCount > 99 ? "99+" : cartItemsCount}
                   </span>
                 )}
                 <ShoppingCartIcon className="w-6 h-6" />
               </div>
-            </button>
+            </Link>
           </div>
         </div>
       </div>

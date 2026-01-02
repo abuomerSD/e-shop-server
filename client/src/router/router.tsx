@@ -1,5 +1,6 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
 import Home from "../pages/Home";
+import Cart from "../pages/Cart";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import NotFound from "../pages/NotFound";
@@ -16,6 +17,7 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 const routes: RouteObject[] = [
   { path: "/", element: <Home /> },
+  { path: "/cart", element: <Cart /> },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
   { path: "/unauthorized", element: <Unauthorized /> },
