@@ -1,9 +1,11 @@
 import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { useEffect, useState } from "react";
 import { userService } from "../../services/api";
-import type { IUser } from "../../types/types";
+import type { IUser, IUserCreate } from "../../types/types";
 import ReactPaginate from "react-paginate";
 import { PAGE_LIMIT } from "../../utils/constants";
+import UserFormModal from "../../components/forms/UserFormModal";
+import DeleteModal from "../../components/forms/DeleteModal";
 
 const Users = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -13,6 +15,14 @@ const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
+
+  // Modal states
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const limit = PAGE_LIMIT;
 
   const fetchUsers = async () => {
@@ -45,6 +55,57 @@ const Users = () => {
     e.preventDefault();
     setPage(0);
     fetchUsers();
+  };
+
+  const handleCreate = async (data: IUserCreate) => {
+    try {
+      await userService.create(data);
+      setShowCreateModal(false);
+      await fetchUsers();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to create user");
+      throw err; // Re-throw so modal can handle it
+    }
+  };
+
+  const handleEdit = async (data: IUserCreate) => {
+    if (selectedUser) {
+      try {
+        await userService.update(selectedUser.id, data);
+        setShowEditModal(false);
+        setSelectedUser(null);
+        await fetchUsers();
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to update user");
+        throw err; // Re-throw so modal can handle it
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedUser) {
+      setDeleteLoading(true);
+      try {
+        await userService.delete(selectedUser.id);
+        setShowDeleteModal(false);
+        setSelectedUser(null);
+        await fetchUsers();
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to delete user");
+      } finally {
+        setDeleteLoading(false);
+      }
+    }
+  };
+
+  const openEditModal = (user: IUser) => {
+    setSelectedUser(user);
+    setShowEditModal(true);
+  };
+
+  const openDeleteModal = (user: IUser) => {
+    setSelectedUser(user);
+    setShowDeleteModal(true);
   };
 
   const getRoleBadgeColor = (role: string) => {
@@ -96,7 +157,10 @@ const Users = () => {
             </button>
           </form>
         </div>
-        <button className="bg-yellow-600 p-2 rounded-md text-gray-100 flex items-center gap-2 cursor-pointer hover:bg-yellow-500 transition-colors duration-200">
+        <button
+          className="bg-yellow-600 p-2 rounded-md text-gray-100 flex items-center gap-2 cursor-pointer hover:bg-yellow-500 transition-colors duration-200"
+          onClick={() => setShowCreateModal(true)}
+        >
           <PlusIcon className="w-5" />
           New User
         </button>
@@ -182,10 +246,18 @@ const Users = () => {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex gap-2 justify-center">
-                            <button className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors">
+                            <button
+                              className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
+                              onClick={() => openEditModal(user)}
+                              title="Edit user"
+                            >
                               <PencilIcon className="w-4 h-4" />
                             </button>
-                            <button className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors">
+                            <button
+                              className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors"
+                              onClick={() => openDeleteModal(user)}
+                              title="Delete user"
+                            >
                               <TrashIcon className="w-4 h-4" />
                             </button>
                           </div>
@@ -226,6 +298,37 @@ const Users = () => {
           </>
         )}
       </div>
+
+      {/* Modals */}
+      <UserFormModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={handleCreate}
+        title="Create New User"
+      />
+
+      <UserFormModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedUser(null);
+        }}
+        onSubmit={handleEdit}
+        user={selectedUser || undefined}
+        title="Edit User"
+      />
+
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setSelectedUser(null);
+        }}
+        onConfirm={handleDelete}
+        title="Delete User"
+        message="Are you sure you want to delete this user? This action cannot be undone."
+        loading={deleteLoading}
+      />
     </div>
   );
 };

@@ -1,9 +1,12 @@
 import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { useEffect, useState } from "react";
 import { brandService } from "../../services/api";
-import type { IBrand } from "../../types/types";
+import type { IBrand, IBrandCreate } from "../../types/types";
 import ReactPaginate from "react-paginate";
 import { PAGE_LIMIT } from "../../utils/constants";
+import BrandFormModal from "../../components/forms/BrandFormModal";
+import DeleteModal from "../../components/forms/DeleteModal";
+import { API_FILE_URL } from "../../config/env";
 
 const Brands = () => {
   const [brands, setBrands] = useState<IBrand[]>([]);
@@ -12,6 +15,14 @@ const Brands = () => {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
+
+  // Modal states
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedBrand, setSelectedBrand] = useState<IBrand | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const limit = PAGE_LIMIT;
 
   const fetchBrands = async () => {
@@ -23,6 +34,7 @@ const Brands = () => {
         page: page + 1,
         limit,
         search: searchTerm || undefined,
+        searchCol: "name",
       });
 
       setBrands(response.data);
@@ -43,6 +55,61 @@ const Brands = () => {
     e.preventDefault();
     setPage(0);
     fetchBrands();
+  };
+
+  const handleCreate = async (data: IBrandCreate, imageFile: File | null) => {
+    try {
+      await brandService.create(data, imageFile || undefined);
+      setShowCreateModal(false);
+      await fetchBrands();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to create brand");
+      throw err; // Re-throw so modal can handle it
+    }
+  };
+
+  const handleEdit = async (data: IBrandCreate, imageFile: File | null) => {
+    if (selectedBrand) {
+      try {
+        await brandService.update(
+          selectedBrand.id,
+          data,
+          imageFile || undefined
+        );
+        setShowEditModal(false);
+        setSelectedBrand(null);
+        await fetchBrands();
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to update brand");
+        throw err; // Re-throw so modal can handle it
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedBrand) {
+      setDeleteLoading(true);
+      try {
+        await brandService.delete(selectedBrand.id);
+        setShowDeleteModal(false);
+        setSelectedBrand(null);
+        await fetchBrands();
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to delete brand");
+      } finally {
+        setDeleteLoading(false);
+      }
+    }
+  };
+
+  const openEditModal = (brand: IBrand) => {
+    setSelectedBrand(brand);
+    setShowEditModal(true);
+  };
+
+  const openDeleteModal = (brand: IBrand) => {
+    setSelectedBrand(brand);
+    setShowDeleteModal(true);
   };
 
   return (
@@ -71,7 +138,10 @@ const Brands = () => {
             Search
           </button>
         </form>
-        <button className="bg-yellow-600 p-2 rounded-md text-gray-100 flex items-center gap-2 cursor-pointer hover:bg-yellow-500 transition-colors duration-200">
+        <button
+          className="bg-yellow-600 p-2 rounded-md text-gray-100 flex items-center gap-2 cursor-pointer hover:bg-yellow-500 transition-colors duration-200"
+          onClick={() => setShowCreateModal(true)}
+        >
           <PlusIcon className="w-5" />
           New Brand
         </button>
@@ -116,7 +186,7 @@ const Brands = () => {
                         <td className="px-4 py-3">
                           {brand.image ? (
                             <img
-                              src={brand.image}
+                              src={`${API_FILE_URL}/${brand.image}`}
                               alt={brand.name}
                               className="w-10 h-10 object-cover rounded"
                             />
@@ -126,10 +196,18 @@ const Brands = () => {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex gap-2 justify-center">
-                            <button className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors">
+                            <button
+                              className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
+                              onClick={() => openEditModal(brand)}
+                              title="Edit brand"
+                            >
                               <PencilIcon className="w-4 h-4" />
                             </button>
-                            <button className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors">
+                            <button
+                              className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors"
+                              onClick={() => openDeleteModal(brand)}
+                              title="Delete brand"
+                            >
                               <TrashIcon className="w-4 h-4" />
                             </button>
                           </div>
@@ -170,6 +248,37 @@ const Brands = () => {
           </>
         )}
       </div>
+
+      {/* Modals */}
+      <BrandFormModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={handleCreate}
+        title="Create New Brand"
+      />
+
+      <BrandFormModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedBrand(null);
+        }}
+        onSubmit={handleEdit}
+        brand={selectedBrand || undefined}
+        title="Edit Brand"
+      />
+
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setSelectedBrand(null);
+        }}
+        onConfirm={handleDelete}
+        title="Delete Brand"
+        message="Are you sure you want to delete this brand? This action cannot be undone."
+        loading={deleteLoading}
+      />
     </div>
   );
 };

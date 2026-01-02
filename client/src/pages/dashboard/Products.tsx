@@ -5,9 +5,17 @@ import {
   categoryService,
   brandService,
 } from "../../services/api";
-import type { IProduct, ICategory, IBrand } from "../../types/types";
+import type {
+  IProduct,
+  ICategory,
+  IBrand,
+  IProductCreate,
+} from "../../types/types";
 import ReactPaginate from "react-paginate";
 import { PAGE_LIMIT } from "../../utils/constants";
+import ProductFormModal from "../../components/forms/ProductFormModal";
+import DeleteModal from "../../components/forms/DeleteModal";
+import { API_FILE_URL } from "../../config/env";
 
 const Products = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -20,6 +28,14 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [error, setError] = useState("");
+
+  // Modal states
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const limit = PAGE_LIMIT;
 
   const fetchProducts = async () => {
@@ -70,6 +86,70 @@ const Products = () => {
     e.preventDefault();
     setPage(0);
     fetchProducts();
+  };
+
+  const handleCreate = async (
+    data: IProductCreate,
+    imageCover?: File,
+    images?: File[]
+  ) => {
+    try {
+      await productService.create(data, imageCover, images);
+      setShowCreateModal(false);
+      await fetchProducts();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to create product");
+      throw err; // Re-throw so modal can handle it
+    }
+  };
+
+  const handleEdit = async (
+    data: IProductCreate,
+    imageCover?: File,
+    images?: File[]
+  ) => {
+    if (selectedProduct) {
+      try {
+        await productService.update(
+          selectedProduct.id,
+          data,
+          imageCover,
+          images
+        );
+        setShowEditModal(false);
+        setSelectedProduct(null);
+        await fetchProducts();
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to update product");
+        throw err; // Re-throw so modal can handle it
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedProduct) {
+      setDeleteLoading(true);
+      try {
+        await productService.delete(selectedProduct.id);
+        setShowDeleteModal(false);
+        setSelectedProduct(null);
+        await fetchProducts();
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to delete product");
+      } finally {
+        setDeleteLoading(false);
+      }
+    }
+  };
+
+  const openEditModal = (product: IProduct) => {
+    setSelectedProduct(product);
+    setShowEditModal(true);
+  };
+
+  const openDeleteModal = (product: IProduct) => {
+    setSelectedProduct(product);
+    setShowDeleteModal(true);
   };
 
   const formatPrice = (price?: number) => {
@@ -132,7 +212,10 @@ const Products = () => {
         </form>
 
         <div className="flex justify-end">
-          <button className="bg-yellow-600 p-2 rounded-md text-gray-100 flex items-center gap-2 cursor-pointer hover:bg-yellow-500 transition-colors duration-200">
+          <button
+            className="bg-yellow-600 p-2 rounded-md text-gray-100 flex items-center gap-2 cursor-pointer hover:bg-yellow-500 transition-colors duration-200"
+            onClick={() => setShowCreateModal(true)}
+          >
             <PlusIcon className="w-5" />
             New Product
           </button>
@@ -232,10 +315,18 @@ const Products = () => {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex gap-2 justify-center">
-                            <button className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors">
+                            <button
+                              className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
+                              onClick={() => openEditModal(product)}
+                              title="Edit product"
+                            >
                               <PencilIcon className="w-4 h-4" />
                             </button>
-                            <button className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors">
+                            <button
+                              className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors"
+                              onClick={() => openDeleteModal(product)}
+                              title="Delete product"
+                            >
                               <TrashIcon className="w-4 h-4" />
                             </button>
                           </div>
@@ -276,6 +367,37 @@ const Products = () => {
           </>
         )}
       </div>
+
+      {/* Modals */}
+      <ProductFormModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={handleCreate}
+        title="Create New Product"
+      />
+
+      <ProductFormModal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedProduct(null);
+        }}
+        onSubmit={handleEdit}
+        product={selectedProduct || undefined}
+        title="Edit Product"
+      />
+
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setSelectedProduct(null);
+        }}
+        onConfirm={handleDelete}
+        title="Delete Product"
+        message="Are you sure you want to delete this product? This action cannot be undone."
+        loading={deleteLoading}
+      />
     </div>
   );
 };
