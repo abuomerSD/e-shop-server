@@ -37,9 +37,12 @@ export const findAll = asyncHandler(async (req, res) => {
     },
   ];
   const subCategories = await subCategory.findAll(whereClause);
+  const countResultsWehre = apiFeatures.search().whereClause;
+  const results = await subCategory.count(countResultsWehre);
+
   res.status(200).json({
     status: "success",
-    results: subCategories.length,
+    results,
     data: subCategories,
   });
 });

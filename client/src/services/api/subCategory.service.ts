@@ -67,7 +67,10 @@ export const subCategoryService = {
       // Append image file
       formData.append("image", imageFile);
 
-      return await http.upload<ISubCategory>(`/subcategories/${id}`, formData);
+      return await http.uploadPut<ISubCategory>(
+        `/subcategories/${id}`,
+        formData
+      );
     } else {
       // Standard JSON request without image
       return await http.put<ISubCategory>(`/subcategories/${id}`, data);

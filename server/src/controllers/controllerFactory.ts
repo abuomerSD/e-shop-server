@@ -40,7 +40,9 @@ class ControllerFactory {
     const apiFeatures = new ApiFeatures(req.query);
     const whereClause = apiFeatures.search().paginate().sort().whereClause;
     const records = await this.model.findAll(whereClause);
-    const results = records.length;
+    const countResultsWehre = apiFeatures.search().whereClause;
+    const results = await this.model.count(countResultsWehre);
+    // const results = records.length;
     res.status(200).json({
       status: "success",
       results,

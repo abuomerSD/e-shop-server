@@ -40,7 +40,9 @@ const Categories = () => {
       });
 
       setCategories(response.data);
-      setTotalPages(Math.ceil((response.results || 0) / limit));
+      // Fix: Ensure we're using the correct property from API response
+      const totalResults = response.results || 0;
+      setTotalPages(Math.ceil(totalResults / limit));
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to fetch categories");
       setCategories([]);
@@ -229,6 +231,7 @@ const Categories = () => {
                   nextLabel={"Next →"}
                   pageCount={totalPages}
                   onPageChange={(selected) => setPage(selected.selected)}
+                  forcePage={page}
                   containerClassName="flex justify-center items-center gap-2"
                   pageClassName="px-3 py-1 border rounded hover:bg-gray-100 cursor-pointer transition-colors"
                   previousClassName="px-3 py-1 border rounded hover:bg-gray-100 cursor-pointer transition-colors"
