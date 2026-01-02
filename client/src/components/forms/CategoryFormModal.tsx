@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import type { ICategoryCreate, ICategory } from "../../types/types";
+import { API_FILE_URL } from "../../config/env";
 
 interface CategoryFormModalProps {
   isOpen: boolean;
@@ -27,6 +28,29 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Sync form data when category prop changes
+  useEffect(() => {
+    if (category) {
+      setFormData({
+        name: category.name || "",
+        image: category.image || "",
+      });
+
+      // Set image preview with full URL if exists
+      if (category.image) {
+        setImagePreview(`${API_FILE_URL}/${category.image}`);
+      } else {
+        setImagePreview("");
+      }
+    } else {
+      // Reset form when no category (create mode)
+      setFormData({ name: "", image: "" });
+      setImagePreview("");
+      setImageFile(null);
+    }
+    setError("");
+  }, [category]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

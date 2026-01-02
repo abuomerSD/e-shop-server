@@ -94,10 +94,6 @@ router
     allowedTo("admin", "manager"),
     uploadSingleImage,
     createSubCategoryValidator,
-    (req: Request, res: Response, next: NextFunction) => {
-      console.log("file", req.file);
-      next();
-    },
     resizeImage("subCategory"),
     create
   );

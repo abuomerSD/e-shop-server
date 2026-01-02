@@ -248,20 +248,9 @@ const Home = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
-                          {product.priceAfterDiscount ? (
-                            <div>
-                              <span className="text-lg font-bold text-green-600">
-                                {formatPrice(product.priceAfterDiscount)}
-                              </span>
-                              <span className="ml-2 text-sm text-gray-500 line-through">
-                                {formatPrice(product.price)}
-                              </span>
-                            </div>
-                          ) : (
-                            <span className="text-lg font-bold text-gray-900">
-                              {formatPrice(product.price)}
-                            </span>
-                          )}
+                          <span className="text-lg font-bold text-gray-900">
+                            {formatPrice(product.price)}
+                          </span>
                         </div>
                         <button
                           onClick={() => handleAddToCart(product.id)}

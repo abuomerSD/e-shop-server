@@ -77,7 +77,6 @@ export interface IProduct {
   quantity?: number;
   sold?: number;
   price?: number;
-  priceAfterDiscount?: number;
   colors?: any[];
   imageCover?: string;
   images?: any[];
@@ -97,7 +96,6 @@ export interface IProductCreate {
   description: string;
   quantity?: number;
   price?: number;
-  priceAfterDiscount?: number;
   colors?: any[];
   imageCover?: string;
   images?: any[];

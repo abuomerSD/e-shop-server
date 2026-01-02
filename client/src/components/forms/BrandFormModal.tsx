@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import type { IBrandCreate, IBrand } from "../../types/types";
+import { API_FILE_URL } from "../../config/env";
 
 interface BrandFormModalProps {
   isOpen: boolean;
@@ -25,6 +26,29 @@ const BrandFormModal: React.FC<BrandFormModalProps> = ({
   const [imagePreview, setImagePreview] = useState<string>(brand?.image || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Sync form data when brand prop changes
+  useEffect(() => {
+    if (brand) {
+      setFormData({
+        name: brand.name || "",
+        image: brand.image || "",
+      });
+
+      // Set image preview with full URL if exists
+      if (brand.image) {
+        setImagePreview(`${API_FILE_URL}/${brand.image}`);
+      } else {
+        setImagePreview("");
+      }
+    } else {
+      // Reset form when no brand (create mode)
+      setFormData({ name: "", image: "" });
+      setImagePreview("");
+      setImageFile(null);
+    }
+    setError("");
+  }, [brand]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

@@ -43,14 +43,28 @@ const Products = () => {
     setError("");
 
     try {
-      const response = await productService.getAll({
+      const params: any = {
         page: page + 1,
         limit,
-        search: searchTerm || undefined,
-        categoryId: selectedCategory || undefined,
-        brandId: selectedBrand || undefined,
-      });
+      };
 
+      // Add search term if provided
+      if (searchTerm?.trim()) {
+        params.search = searchTerm.trim();
+        params.searchCol = "title";
+      }
+
+      // Add category filter if selected
+      if (selectedCategory) {
+        params.categoryId = selectedCategory;
+      }
+
+      // Add brand filter if selected
+      if (selectedBrand) {
+        params.brandId = selectedBrand;
+      }
+
+      const response = await productService.getAll(params);
       setProducts(response.data);
       setTotalPages(Math.ceil((response.results || 0) / limit));
     } catch (err: any) {
@@ -258,7 +272,6 @@ const Products = () => {
                           {product.imageCover ? (
                             <img
                               src={`${API_FILE_URL}/${product.imageCover}`}
-                              alt={product.title}
                               className="w-12 h-12 object-cover rounded"
                             />
                           ) : (
@@ -279,11 +292,6 @@ const Products = () => {
                           <div className="font-medium">
                             {formatPrice(product.price)}
                           </div>
-                          {product.priceAfterDiscount && (
-                            <div className="text-green-600 text-xs">
-                              Sale: {formatPrice(product.priceAfterDiscount)}
-                            </div>
-                          )}
                         </td>
                         <td className="px-4 py-3">
                           <span

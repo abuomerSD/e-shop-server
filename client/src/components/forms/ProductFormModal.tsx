@@ -7,6 +7,7 @@ import type {
   IBrand,
 } from "../../types/types";
 import { categoryService, brandService } from "../../services/api";
+import { API_FILE_URL } from "../../config/env";
 
 interface ProductFormModalProps {
   isOpen: boolean;
@@ -32,7 +33,6 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
     description: product?.description || "",
     quantity: product?.quantity || 0,
     price: product?.price || 0,
-    priceAfterDiscount: product?.priceAfterDiscount || 0,
     colors: product?.colors || [],
     categoryId: product?.categoryId || "",
     brandId: product?.brandId || "",
@@ -58,6 +58,54 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
       fetchBrands();
     }
   }, [isOpen]);
+
+  // Sync form data when product prop changes
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        title: product.title || "",
+        description: product.description || "",
+        quantity: product.quantity || 0,
+        price: product.price || 0,
+        colors: Array.isArray(product.colors) ? product.colors : [],
+        categoryId: product.categoryId || "",
+        brandId: product.brandId || "",
+      });
+
+      // Set image cover preview with full URL if exists
+      if (product.imageCover) {
+        setImageCoverPreview(`${API_FILE_URL}/${product.imageCover}`);
+      } else {
+        setImageCoverPreview("");
+      }
+
+      // Set images preview with full URLs if exist
+      if (product.images && product.images.length > 0) {
+        const imagePreviews = product.images.map((img) => {
+          const imageUrl = typeof img === "string" ? img : img.url || img;
+          return `${API_FILE_URL}/${imageUrl}`;
+        });
+        setImagesPreview(imagePreviews);
+      } else {
+        setImagesPreview([]);
+      }
+    } else {
+      // Reset form when no product (create mode)
+      setFormData({
+        title: "",
+        description: "",
+        quantity: 0,
+        price: 0,
+        colors: [],
+        categoryId: "",
+        brandId: "",
+      });
+      setImageCoverPreview("");
+      setImagesPreview([]);
+      setImageCoverFile(null);
+      setImagesFiles([]);
+    }
+  }, [product]);
 
   const fetchCategories = async () => {
     try {
@@ -185,11 +233,50 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
     try {
       if (!formData.title.trim()) {
         setError("Product title is required");
+        setLoading(false);
         return;
       }
 
       if (!formData.description.trim()) {
         setError("Product description is required");
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.categoryId) {
+        setError("Product category is required");
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.brandId) {
+        setError("Product brand is required");
+        setLoading(false);
+        return;
+      }
+
+      // Price must be greater than 0 (disallow zero price)
+      if (
+        formData.price === undefined ||
+        formData.price === null ||
+        Number.isNaN(Number(formData.price)) ||
+        Number(formData.price) <= 0
+      ) {
+        setError("Product price must be greater than 0");
+        setLoading(false);
+        return;
+      }
+
+      // Quantity must be an integer >= 0
+      if (
+        formData.quantity === undefined ||
+        formData.quantity === null ||
+        Number.isNaN(Number(formData.quantity)) ||
+        !Number.isInteger(Number(formData.quantity)) ||
+        Number(formData.quantity) < 0
+      ) {
+        setError("Product quantity must be an integer >= 0");
+        setLoading(false);
         return;
       }
 
@@ -205,7 +292,6 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
         description: "",
         quantity: 0,
         price: 0,
-        priceAfterDiscount: 0,
         colors: [],
         categoryId: "",
         brandId: "",
@@ -263,12 +349,13 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category
+                Category *
               </label>
               <select
                 name="categoryId"
                 value={formData.categoryId}
                 onChange={handleChange}
+                required
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
               >
                 <option value="">Select a category</option>
@@ -299,7 +386,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Price
+                Price *
               </label>
               <input
                 type="number"
@@ -308,6 +395,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
                 onChange={handleChange}
                 min="0"
                 step="0.01"
+                required
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 placeholder="0.00"
               />
@@ -315,23 +403,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Sale Price
-              </label>
-              <input
-                type="number"
-                name="priceAfterDiscount"
-                value={formData.priceAfterDiscount}
-                onChange={handleChange}
-                min="0"
-                step="0.01"
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                placeholder="0.00"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Quantity
+                Quantity *
               </label>
               <input
                 type="number"
@@ -339,6 +411,8 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
                 value={formData.quantity}
                 onChange={handleChange}
                 min="0"
+                step="1"
+                required
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 placeholder="0"
               />
@@ -347,12 +421,13 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Brand
+              Brand *
             </label>
             <select
               name="brandId"
               value={formData.brandId}
               onChange={handleChange}
+              required
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
             >
               <option value="">Select a brand</option>

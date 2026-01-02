@@ -23,7 +23,29 @@ export const createProductValidator = [
     }),
   body("description").notEmpty().withMessage("Description is required"),
   // price
+  body("price")
+    .notEmpty()
+    .withMessage("price is required")
+    .isFloat()
+    .withMessage("price must be a number"),
+  // categoryId
+  body("categoryId")
+    .notEmpty()
+    .withMessage("categoryId is required")
+    .isUUID()
+    .withMessage("invalid categoryId"),
+  // brandId
+  body("brandId")
+    .notEmpty()
+    .withMessage("brandId is required")
+    .isUUID()
+    .withMessage("invalid brandId"),
   // quantity
+  body("quantity")
+    .notEmpty()
+    .withMessage("quantity is required")
+    .isInt()
+    .withMessage("quantity must be an integer"),
   validatorMiddleware,
 ];
 
@@ -50,6 +72,30 @@ export const updateProductValidator = [
       }
     }),
   body("description").notEmpty().withMessage("Description is required"),
+  // price
+  body("price")
+    .notEmpty()
+    .withMessage("price is required")
+    .isFloat()
+    .withMessage("price must be a number"),
+  // categoryId
+  body("categoryId")
+    .notEmpty()
+    .withMessage("categoryId is required")
+    .isUUID()
+    .withMessage("invalid categoryId"),
+  // brandId
+  body("brandId")
+    .notEmpty()
+    .withMessage("brandId is required")
+    .isUUID()
+    .withMessage("invalid brandId"),
+  // quantity
+  body("quantity")
+    .notEmpty()
+    .withMessage("quantity is required")
+    .isInt()
+    .withMessage("quantity must be an integer"),
   validatorMiddleware,
 ];
 

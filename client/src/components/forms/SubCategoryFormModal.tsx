@@ -6,6 +6,7 @@ import type {
   ICategory,
 } from "../../types/types";
 import { categoryService } from "../../services/api/category.service";
+import { API_FILE_URL } from "../../config/env";
 
 interface SubCategoryFormModalProps {
   isOpen: boolean;
@@ -48,7 +49,13 @@ const SubCategoryFormModal: React.FC<SubCategoryFormModalProps> = ({
         categoryId: subCategory.categoryId,
         image: subCategory.image || "",
       });
-      setImagePreview(subCategory.image || "");
+
+      // Set image preview with full URL if exists
+      if (subCategory.image) {
+        setImagePreview(`${API_FILE_URL}/${subCategory.image}`);
+      } else {
+        setImagePreview("");
+      }
     } else {
       setFormData({ name: "", categoryId: "", image: "" });
       setImagePreview("");

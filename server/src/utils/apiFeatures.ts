@@ -6,8 +6,8 @@ export class ApiFeatures {
     this.whereClause = {};
   }
 
-  reqQuery:any = null;
-  whereClause:any = null;
+  reqQuery: any = null;
+  whereClause: any = null;
   paginate() {
     if (this.reqQuery.page && this.reqQuery.limit) {
       const page = Number(this.reqQuery.page);
@@ -32,8 +32,8 @@ export class ApiFeatures {
   }
 
   search() {
-    const allowedColumns = ['name', 'email'];
-    if(!allowedColumns.includes(this.reqQuery.searchCol))  return this; // to prevent SQL Injection
+    const allowedColumns = ["name", "email", "title", "categoryId", "brandId"];
+    if (!allowedColumns.includes(this.reqQuery.searchCol)) return this; // to prevent SQL Injection
 
     if (this.reqQuery.search && this.reqQuery.searchCol) {
       const search = this.reqQuery.search;

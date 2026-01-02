@@ -6,6 +6,7 @@ export const productService = {
     page?: number;
     limit?: number;
     search?: string;
+    searchCol?: string;
     categoryId?: string;
     brandId?: string;
     minPrice?: number;
@@ -15,9 +16,11 @@ export const productService = {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append("page", params.page.toString());
     if (params?.limit) searchParams.append("limit", params.limit.toString());
-    if (params?.search) searchParams.append("keyword", params.search);
-    if (params?.categoryId) searchParams.append("category", params.categoryId);
-    if (params?.brandId) searchParams.append("brand", params.brandId);
+    if (params?.search) searchParams.append("search", params.search);
+    if (params?.searchCol) searchParams.append("searchCol", params.searchCol);
+    if (params?.categoryId)
+      searchParams.append("categoryId", params.categoryId);
+    if (params?.brandId) searchParams.append("brandId", params.brandId);
     if (params?.minPrice)
       searchParams.append("price[gte]", params.minPrice.toString());
     if (params?.maxPrice)
@@ -48,11 +51,6 @@ export const productService = {
         formData.append("quantity", data.quantity.toString());
       if (data.price !== undefined)
         formData.append("price", data.price.toString());
-      if (data.priceAfterDiscount !== undefined)
-        formData.append(
-          "priceAfterDiscount",
-          data.priceAfterDiscount.toString()
-        );
       if (data.categoryId) formData.append("categoryId", data.categoryId);
       if (data.brandId) formData.append("brandId", data.brandId);
       if (data.colors) formData.append("colors", JSON.stringify(data.colors));
@@ -89,11 +87,6 @@ export const productService = {
         formData.append("quantity", data.quantity.toString());
       if (data.price !== undefined)
         formData.append("price", data.price.toString());
-      if (data.priceAfterDiscount !== undefined)
-        formData.append(
-          "priceAfterDiscount",
-          data.priceAfterDiscount.toString()
-        );
       if (data.categoryId) formData.append("categoryId", data.categoryId);
       if (data.brandId) formData.append("brandId", data.brandId);
       if (data.colors) formData.append("colors", JSON.stringify(data.colors));
@@ -108,7 +101,7 @@ export const productService = {
         });
       }
 
-      return await http.upload<IProduct>(`/products/${id}`, formData);
+      return await http.uploadPut<IProduct>(`/products/${id}`, formData);
     } else {
       // Standard JSON request without images
       return await http.put<IProduct>(`/products/${id}`, data);
