@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import type { IUserCreate, IUser } from "../../types/types";
 
@@ -23,17 +23,44 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
     password: "",
     phone: user?.phone || "",
     role: user?.role || "user",
+    active: user?.active ?? true,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Sync form data when user prop changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        email: user.email || "",
+        password: "",
+        phone: user.phone || "",
+        role: user.role || "user",
+        active: user.active ?? true,
+      });
+    } else {
+      // Reset form when no user (create mode)
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        phone: "",
+        role: "user",
+        active: true,
+      });
+    }
+    setError("");
+  }, [user]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    const parsedValue = name === "active" ? value === "true" : value;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: parsedValue,
     }));
   };
 
@@ -73,6 +100,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
         password: "",
         phone: "",
         role: "user",
+        active: true,
       });
       onClose();
     } catch (err: any) {
@@ -204,6 +232,26 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
               <option value="user">User</option>
               <option value="manager">Manager</option>
               <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="active"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Active *
+            </label>
+            <select
+              id="active"
+              name="active"
+              value={String(formData.active)}
+              onChange={handleChange}
+              required
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            >
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
             </select>
           </div>
 

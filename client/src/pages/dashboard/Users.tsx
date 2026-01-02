@@ -34,6 +34,7 @@ const Users = () => {
         page: page + 1,
         limit,
         search: searchTerm || undefined,
+        searchCol: "name",
         role: selectedRole || undefined,
       });
 

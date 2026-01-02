@@ -6,12 +6,14 @@ export const userService = {
     page?: number;
     limit?: number;
     search?: string;
+    searchCol?: string;
     role?: string;
   }) => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append("page", params.page.toString());
     if (params?.limit) searchParams.append("limit", params.limit.toString());
-    if (params?.search) searchParams.append("keyword", params.search);
+    if (params?.search) searchParams.append("search", params.search);
+    if (params?.searchCol) searchParams.append("searchCol", params.searchCol);
     if (params?.role) searchParams.append("role", params.role);
 
     const queryString = searchParams.toString();

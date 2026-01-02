@@ -7,6 +7,7 @@ import { Request, Response } from "express";
 import { generateRandomSixDigitNumber } from "../utils/generateOTP.js";
 import { sendEmail } from "../utils/emailSender.js";
 import ApiError from "../utils/apiError.js";
+import { ApiFeatures } from "../utils/apiFeatures.js";
 
 const factory = new ControllerFactory(User);
 
@@ -29,7 +30,27 @@ export const { findOne } = factory;
  * @route   GET /api/v1/users
  * @access  Private
  */
-export const { findAll } = factory;
+export const findAll = asyncHandler(async (req, res) => {
+  const apiFeatures = new ApiFeatures(req.query);
+  const whereClause = apiFeatures.search().paginate().sort().whereClause;
+
+  // Add filtering for role
+  if (req.query.role) {
+    whereClause.where = whereClause.where || {};
+    whereClause.where.role = req.query.role;
+  }
+
+  const users = await User.findAll(whereClause);
+  const countResultsWhere = apiFeatures.search().whereClause;
+
+  const results = await User.count(countResultsWhere);
+
+  res.status(200).json({
+    status: "success",
+    results,
+    data: users,
+  });
+});
 
 /**
  * @desc    Update a user by ID

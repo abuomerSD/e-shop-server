@@ -18,6 +18,7 @@ export interface IUserCreate {
   password: string;
   phone?: string;
   role?: "user" | "manager" | "admin";
+  active?: boolean;
 }
 
 // Category Types
